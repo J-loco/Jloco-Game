@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # Game Database
   starloco_redis:
@@ -27,9 +25,9 @@ services:
       - '127.0.0.1:3306:3306'
     volumes:
       - db-sql:/var/lib/mysql
-      - $PWD/db-init/:/docker-entrypoint-initdb.d/:ro
+      - ./db-init/:/docker-entrypoint-initdb.d/:ro
     healthcheck:
-      test: ["CMD", "mariadb-admin" ,"ping", "-h", "localhost", '-uroot', '-p$$MYSQL_ROOT_PASSWORD']
+      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD}"]
       timeout: 20s
       retries: 10
   # Login
@@ -40,8 +38,9 @@ services:
       - starloco
     ports:
       - '450:450'
+      - '127.0.0.1:666:666'
     volumes:
-      - $PWD/config/login.config.properties:/app/login.config.properties
+      - ./config/login.config.properties:/app/login.config.properties
     depends_on:
       starloco_mariadb:
         condition: service_healthy
@@ -54,8 +53,8 @@ services:
     ports:
       - '5555:5555'
     volumes:
-      - $PWD/config/:/app/config
-      - $PWD/scripts:/app/scripts
+      - ./config/:/app/config
+      - ./scripts:/app/scripts
     depends_on:
       starloco_redis:
         condition: service_started

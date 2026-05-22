@@ -13,6 +13,7 @@ USE starloco_login;
  Target Server Version : 100322 (10.3.22-MariaDB)
  File Encoding         : 65001
 
+
  Date: 30/04/2023 08:50:34
 */
 

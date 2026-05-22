@@ -1,81 +1,3 @@
-USE starloco_game;
-
-UPDATE `sorts` SET `nom` = 'Dépouillage', `sprite` = 0, `spriteInfos` = '0,0,0', `lvl1` = '179;50;-1;-1;2;0;0d0+50|154;400;-1;-1;2;0;0d0+400,179;100;-1;-1;2;0;0d0+100|154;800;-1;-1;2;0;0d0+800, 3, 1, 1, 50, 50, false, true, false, false, 0, 1, 0, 0, XdXdXdXd,-1,18; 19; 3; 1; 41, 0, true', `lvl2` = '179;50;-1;-1;2;0;0d0+50|154;400;-1;-1;2;0;0d0+400,179;100;-1;-1;2;0;0d0+100|154;800;-1;-1;2;0;0d0+800, 3, 1, 1, 50, 50, false, true, false, false, 0, 1, 0, 0, XdXdXdXd,-1,18; 19; 3; 1; 41, 0, true', `lvl3` = '179;50;-1;-1;2;0;0d0+50|154;400;-1;-1;2;0;0d0+400,179;100;-1;-1;2;0;0d0+100|154;800;-1;-1;2;0;0d0+800, 3, 1, 1, 50, 50, false, true, false, false, 0, 1, 0, 0, XdXdXdXd,-1,18; 19; 3; 1; 41, 0, true', `lvl4` = '179;50;-1;-1;2;0;0d0+50|154;400;-1;-1;2;0;0d0+400,179;100;-1;-1;2;0;0d0+100|154;800;-1;-1;2;0;0d0+800, 3, 1, 1, 50, 50, false, true, false, false, 0, 1, 0, 0, XdXdXdXd,-1,18; 19; 3; 1; 41, 0, true', `lvl5` = '179;50;-1;-1;2;0;0d0+50|154;400;-1;-1;2;0;0d0+400,179;100;-1;-1;2;0;0d0+100|154;800;-1;-1;2;0;0d0+800, 3, 1, 1, 50, 50, false, true, false, false, 0, 1, 0, 0, XdXdXdXd,-1,18; 19; 3; 1; 41, 0, true', `lvl6` = '-1', `effectTarget` = '2;2:2;2', `type` = 0, `duration` = 300, `invalid_state` = '', `needed_state` = '' WHERE `id` = 1084;
-UPDATE `sorts` SET `nom` = 'Retour du Roi', `sprite` = -1, `spriteInfos` = '0,0,0', `lvl1` = '114;2;-1;-1;2;0|186;200;-1;-1;2;0;0d0+200,112;0;4;-1;2;0;4d0+0|186;400;-1;-1;2;0;0d0+400, 3, 1, 6, 50, 50, false, true, false, true, 0, 2, 1, 0, PaXbPaXb,-1,18; 19; 3; 1; 41, 0, true', `lvl2` = '114;2;-1;-1;2;0|186;200;-1;-1;2;0;0d0+200,112;0;4;-1;2;0;4d0+0|186;400;-1;-1;2;0;0d0+400, 3, 1, 6, 50, 50, false, true, false, true, 0, 2, 1, 0, PaXbPaXb,-1,18; 19; 3; 1; 41, 0, true', `lvl3` = '114;2;-1;-1;2;0|186;200;-1;-1;2;0;0d0+200,112;0;4;-1;2;0;4d0+0|186;400;-1;-1;2;0;0d0+400, 3, 1, 6, 50, 50, false, true, false, true, 0, 2, 1, 0, PaXbPaXb,-1,18; 19; 3; 1; 41, 0, true', `lvl4` = '114;2;-1;-1;2;0|186;200;-1;-1;2;0;0d0+200,112;0;4;-1;2;0;4d0+0|186;400;-1;-1;2;0;0d0+400, 3, 1, 6, 50, 50, false, true, false, true, 0, 2, 1, 0, PaXbPaXb,-1,18; 19; 3; 1; 41, 0, true', `lvl5` = '114;2;-1;-1;2;0|186;200;-1;-1;2;0;0d0+200,112;0;4;-1;2;0;4d0+0|186;400;-1;-1;2;0;0d0+400, 3, 1, 6, 50, 50, false, true, false, true, 0, 2, 1, 0, PaXbPaXb,-1,18; 19; 3; 1; 41, 0, true', `lvl6` = '-1', `effectTarget` = '4;2:4;2', `type` = 2, `duration` = 300, `invalid_state` = '', `needed_state` = '' WHERE `id` = 1083;
-UPDATE `sorts` SET `nom` = 'Tourbe Malveillante', `sprite` = 0, `spriteInfos` = '0,0,0', `lvl1` = '98;16;25;-1;0;0;1d10+15|116;3;-1;-1;2;0;0d0+3,98;31;50;-1;0;0;1d20+30|116;6;-1;-1;2;0;0d0+6, 5, 1, 7, 50, 50, false, true, false, true, 0, 0, 0, 0, XbXbXbXb,-1,18; 19; 3; 1; 41, 0, true', `lvl2` = '98;16;25;-1;0;0;1d10+15|116;3;-1;-1;2;0;0d0+3,98;31;50;-1;0;0;1d20+30|116;6;-1;-1;2;0;0d0+6, 5, 1, 7, 50, 50, false, true, false, true, 0, 0, 0, 0, XbXbXbXb,-1,18; 19; 3; 1; 41, 0, true', `lvl3` = '98;16;25;-1;0;0;1d10+15|116;3;-1;-1;2;0;0d0+3,98;31;50;-1;0;0;1d20+30|116;6;-1;-1;2;0;0d0+6, 5, 1, 7, 50, 50, false, true, false, true, 0, 0, 0, 0, XbXbXbXb,-1,18; 19; 3; 1; 41, 0, true', `lvl4` = '98;16;25;-1;0;0;1d10+15|116;3;-1;-1;2;0;0d0+3,98;31;50;-1;0;0;1d20+30|116;6;-1;-1;2;0;0d0+6, 5, 1, 7, 50, 50, false, true, false, true, 0, 0, 0, 0, XbXbXbXb,-1,18; 19; 3; 1; 41, 0, true', `lvl5` = '98;16;25;-1;0;0;1d10+15|116;3;-1;-1;2;0;0d0+3,98;31;50;-1;0;0;1d20+30|116;6;-1;-1;2;0;0d0+6, 5, 1, 7, 50, 50, false, true, false, true, 0, 0, 0, 0, XbXbXbXb,-1,18; 19; 3; 1; 41, 0, true', `lvl6` = '-1', `effectTarget` = '2;2:2;2', `type` = 0, `duration` = 300, `invalid_state` = '', `needed_state` = '' WHERE `id` = 1082;
-UPDATE `monsters` SET `name` = 'Kralamoure Géant', `gfxID` = 1635, `align` = 3, `grades` = '1600@900;900;900;900;900;11499;2499|1610@900;900;900;900;900;11499;2499|1620@900;900;900;900;900;11499;2499|1630@900;900;900;900;900;11499;2499|1640@900;900;900;900;900;11499;2499', `colors` = '-1,-1,-1', `stats` = '2000,0,2000,2000,2000|2100,0,2100,2100,2100|2200,0,2200,2200,2200|2300,0,2300,2300,2300|2400,0,2400,2400,2400', `statsInfos` = '0;0;0;4', `spells` = '1105@1;1103@1;1106@1;1279@1|1105@2;1103@2;1106@2;1279@2|1105@3;1103@3;1106@3;1279@3|1105@4;1103@4;1106@4;1279@4|1105@5;1103@5;1106@5;1279@5', `pdvs` = '4600|4700|4800|4900|5000', `points` = '18;-1|18;-1|18;-1|18;-1|18;-1', `inits` = '16400|17200|18000|18800|19600', `minKamas` = 0, `maxKamas` = 0, `exps` = '1200000|1500000|1800000|2100000|2400000', `AI_Type` = 21, `capturable` = 1, `type` = 73, `aggroDistance` = 5 WHERE `id` = 423;
-UPDATE `monsters` SET `name` = 'Bouftou des Cavernes', `gfxID` = 1354, `align` = -1, `grades` = '40@30;-18;50;20;-25;35;45|42@32;-16;53;22;-22;39;50|44@34;-14;56;24;-19;44;56|46@36;-12;59;26;-16;48;61|48@38;-10;62;28;-13;53;67', `colors` = '-1,-1,-1', `stats` = '200,50,0,0,100|210,60,0,0,110|220,70,0,0,120|230,80,0,0,130|240,90,0,0,140', `statsInfos` = '0;0;0;1', `spells` = '202@1;249@1;259@1;250@1|202@2;249@2;259@2;250@2|202@3;249@3;259@3;250@3|202@4;249@4;259@4;250@4|202@5;249@5;259@5;250@5', `pdvs` = '250|260|270|280|290', `points` = '12;5|12;5|12;5|12;5|12;5', `inits` = '300|320|340|360|380', `minKamas` = 10, `maxKamas` = 30, `exps` = '6000|6500|7000|7500|8000', `AI_Type` = 2, `capturable` = 1, `type` = 1, `aggroDistance` = 4, `isBoss` = 0, `isArchmonster` = 0 WHERE `id` = 671;
-UPDATE `monsters` SET `name` = 'Boufcoul', `gfxID` = 1355, `align` = -1, `grades` = '50@30;50;-20;-25;20;35;45|52@32;53;-18;-22;22;39;50|54@34;56;-16;-19;24;44;56|56@36;59;-14;-16;26;48;61|58@38;62;-12;-13;28;53;67', `colors` = '-1,-1,-1', `stats` = '0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0', `statsInfos` = '0;0;0;1', `spells` = '202@1;608@1|202@2;608@2|202@3;608@3|202@4;608@4|202@5;608@5', `pdvs` = '450|460|470|480|490', `points` = '12;6|12;6|12;6|12;6|12;6', `inits` = '0|0|0|0|0', `minKamas` = 10, `maxKamas` = 30, `exps` = '8000|8500|9000|9500|10000', `AI_Type` = 2, `capturable` = 1, `type` = 1, `aggroDistance` = 4, `isBoss` = 0, `isArchmonster` = 0 WHERE `id` = 672;
-UPDATE `sorts` SET `nom` = 'Malédiction Koalak', `sprite` = 0, `spriteInfos` = '0,1,1', `lvl1` = '127;3;4;-1;1;9;1d2+2|101;3;4;-1;1;9;1d2+2|162;100;-1;-1;1;9;0d0+100|163;100;-1;-1;1;9;0d0+100|154;400;-1;-1;1;9;0d0+400|155;400;-1;-1;1;9;0d0+400|152;400;-1;-1;1;9;0d0+400|157;400;-1;-1;1;9;0d0+400|171;50;-1;-1;1;9;0d0+50|145;200;-1;-1;1;9;0d0+200|179;200;-1;-1;1;9;0d0+200,-1, 4, 0, 0, 0, 50, true, true, false, false, 0, 1, 0, 0, C_C_C_C_C_C_C_C_C_C_C_,-1,18; 19; 3; 1; 41, 0, false', `lvl2` = '127;3;4;-1;1;9;1d2+2|101;3;4;-1;1;9;1d2+2|162;100;-1;-1;1;9;0d0+100|163;100;-1;-1;1;9;0d0+100|154;400;-1;-1;1;9;0d0+400|155;400;-1;-1;1;9;0d0+400|152;400;-1;-1;1;9;0d0+400|157;400;-1;-1;1;9;0d0+400|171;50;-1;-1;1;9;0d0+50|145;200;-1;-1;1;9;0d0+200|179;200;-1;-1;1;9;0d0+200,-1, 4, 0, 0, 0, 50, true, true, false, false, 0, 1, 0, 0, C_C_C_C_C_C_C_C_C_C_C_,-1,18; 19; 3; 1; 41, 0, false', `lvl3` = '127;3;4;-1;1;9;1d2+2|101;3;4;-1;1;9;1d2+2|162;100;-1;-1;1;9;0d0+100|163;100;-1;-1;1;9;0d0+100|154;400;-1;-1;1;9;0d0+400|155;400;-1;-1;1;9;0d0+400|152;400;-1;-1;1;9;0d0+400|157;400;-1;-1;1;9;0d0+400|171;50;-1;-1;1;9;0d0+50|145;200;-1;-1;1;9;0d0+200|179;200;-1;-1;1;9;0d0+200,-1, 4, 0, 0, 0, 50, true, true, false, false, 0, 1, 0, 0, C_C_C_C_C_C_C_C_C_C_C_,-1,18; 19; 3; 1; 41, 0, false', `lvl4` = '127;3;4;-1;1;9;1d2+2|101;3;4;-1;1;9;1d2+2|162;100;-1;-1;1;9;0d0+100|163;100;-1;-1;1;9;0d0+100|154;400;-1;-1;1;9;0d0+400|155;400;-1;-1;1;9;0d0+400|152;400;-1;-1;1;9;0d0+400|157;400;-1;-1;1;9;0d0+400|171;50;-1;-1;1;9;0d0+50|145;200;-1;-1;1;9;0d0+200|179;200;-1;-1;1;9;0d0+200,-1, 4, 0, 0, 0, 50, true, true, false, false, 0, 1, 0, 0, C_C_C_C_C_C_C_C_C_C_C_,-1,18; 19; 3; 1; 41, 0, false', `lvl5` = '127;3;4;-1;1;9;1d2+2|101;3;4;-1;1;9;1d2+2|162;100;-1;-1;1;9;0d0+100|163;100;-1;-1;1;9;0d0+100|154;400;-1;-1;1;9;0d0+400|155;400;-1;-1;1;9;0d0+400|152;400;-1;-1;1;9;0d0+400|157;400;-1;-1;1;9;0d0+400|171;50;-1;-1;1;9;0d0+50|145;200;-1;-1;1;9;0d0+200|179;200;-1;-1;1;9;0d0+200,-1, 4, 0, 0, 0, 50, true, true, false, false, 0, 1, 0, 0, C_C_C_C_C_C_C_C_C_C_C_,-1,18; 19; 3; 1; 41, 0, false', `lvl6` = '-1', `effectTarget` = '2;2;2;2;2;2;2;2;2;2;2', `type` = 1, `duration` = 300, `invalid_state` = '', `needed_state` = '' WHERE `id` = 779;
-UPDATE `subarea_data` SET `alignement` = 0, `conquistable` = 0, `prisme` = 0 WHERE `id` = 473;
-UPDATE `subarea_data` SET `alignement` = 0, `conquistable` = 0, `prisme` = 0 WHERE `id` = 537;
-UPDATE `subarea_data` SET `alignement` = 0, `conquistable` = 0, `prisme` = 0 WHERE `id` = 538;
-UPDATE `monsters` SET `name` = 'Diamantine', `gfxID` = 1357, `align` = -1, `grades` = '100@90;90;-10;-10;-10;45;40|105@92;92;-9;-9;-9;49;44|110@94;94;-8;-8;-8;54;49|115@96;96;-7;-7;-7;58;53|120@98;98;-6;-6;-6;63;58', `colors` = '3dc6b9,3dc6b9,3dc6b9', `stats` = '100,100,0,9999,100|110,110,10,9999,110|120,120,20,9999,120|130,130,30,9999,130|140,140,40,9999,140', `statsInfos` = '0;0;0;1', `spells` = '142@6;770@1;709@1;573@1;720@1|142@6;770@2;709@2;573@2;720@2|142@6;770@3;709@3;573@3;720@3|142@6;770@4;709@4;573@4;720@4|142@6;770@5;709@5;573@5;720@5', `pdvs` = '6200|6400|6600|6800|7000', `points` = '9;4|9;4|9;4|9;4|9;4', `inits` = '10199|10229|10259|10289|10319', `minKamas` = 100, `maxKamas` = 120, `exps` = '10000|10500|11000|11500|12000', `AI_Type` = 3, `capturable` = 1, `type` = 1, `aggroDistance` = 0, `isBoss` = 0, `isArchmonster` = 0 WHERE `id` = 681;
-UPDATE `monsters` SET `name` = 'Saphira', `gfxID` = 1357, `align` = -1, `grades` = '100@90;-10;-10;90;-10;110;115|105@92;-9;-9;92;-9;114;119|110@94;-8;-8;94;-8;119;124|115@96;-7;-7;96;-7;123;128|120@98;-6;-6;98;-6;128;133', `colors` = '73a5e4,73a5e4,73a5e4', `stats` = '100,100,100,200,100|110,110,110,210,210|120,120,120,220,220|130,130,130,230,130|140,140,140,240,240', `statsInfos` = '0;0;0;1', `spells` = '309@1;203@1;707@1;770@1|309@2;203@2;707@2;770@2|309@3;203@3;707@3;770@3|309@4;203@4;707@4;770@4|309@5;203@5;707@5;770@5', `pdvs` = '6200|6400|6600|6800|7000', `points` = '9;4|9;4|9;4|9;4|9;4', `inits` = '500|540|580|620|660', `minKamas` = 100, `maxKamas` = 120, `exps` = '10000|10500|11000|11500|12000', `AI_Type` = 3, `capturable` = 1, `type` = 1, `aggroDistance` = 0, `isBoss` = 0, `isArchmonster` = 0 WHERE `id` = 675;
-UPDATE `monsters` SET `name` = 'Rubise', `gfxID` = 1357, `align` = -1, `grades` = '100@90;-10;90;-10;-10;45;40|105@92;-9;92;-9;-9;49;44|110@94;-8;94;-8;-8;54;49|115@96;-7;96;-7;-7;58;53|120@98;-6;98;-6;-6;63;58', `colors` = 'fb735c,fb735c,fb735c', `stats` = '100,100,0,100,100|110,110,10,110,110|120,120,20,120,120|140,140,40,140,140|160,160,60,160,160', `statsInfos` = '0;0;0;1', `spells` = '719@1;716@1;721@1;142@6;717@1;713@1;708@1;770@1|719@2;716@2;721@2;142@6;717@2;713@2;708@2;770@2|719@3;716@3;721@3;142@6;717@3;713@3;708@3;770@3|719@4;716@4;721@4;142@6;717@4;713@4;708@4;770@4|719@5;716@5;721@5;142@6;717@5;713@5;708@5;770@5', `pdvs` = '6200|6400|6600|6800|7000', `points` = '9;4|9;4|9;4|9;4|9;4', `inits` = '300|340|380|420|460', `minKamas` = 100, `maxKamas` = 120, `exps` = '10000|10500|11000|11500|12000', `AI_Type` = 3, `capturable` = 1, `type` = 1, `aggroDistance` = 0, `isBoss` = 0, `isArchmonster` = 0 WHERE `id` = 677;
-DROP TABLE IF EXISTS `quest_progress`;
-create table quest_progress
-(
-    account_id           int                   not null,
-    player_id            int                   not null,
-    quest_id             int                   not null,
-    current_step         int                   not null,
-    completed_objectives text       default '' not null,
-    finished             tinyint(1) default 0  not null,
-    primary key (account_id, player_id, quest_id)
-);
-DROP TABLE IF EXISTS `donjons`;
-CREATE TABLE `donjons`  (
-  `map` int(11) NOT NULL DEFAULT 0,
-  `npc` int(11) NOT NULL DEFAULT 0,
-  `key` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `donjon` tinytext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`map`, `npc`) USING BTREE
-) ENGINE = MyISAM CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of donjons
--- ----------------------------
-INSERT INTO `donjons` VALUES (10359, 886, '8545', 'Incarnam');
-INSERT INTO `donjons` VALUES (10155, 798, '8437', 'Ensablé');
-INSERT INTO `donjons` VALUES (9788, -1, '8342', 'Sanctuaire des Dragoeufs');
-INSERT INTO `donjons` VALUES (9787, 779, '8156', 'Canidés');
-INSERT INTO `donjons` VALUES (9538, 783, '7924', 'Labyrinthe minotoror');
-INSERT INTO `donjons` VALUES (9527, 778, '8142', 'Tofus Royal');
-INSERT INTO `donjons` VALUES (9503, 758, '8073', 'Skeunk');
-INSERT INTO `donjons` VALUES (9470, 775, '8135', 'Bwork');
-INSERT INTO `donjons` VALUES (9397, 784, '7511', 'Labyrinthe du Dragon Cochon');
-INSERT INTO `donjons` VALUES (9127, 797, '7557', 'Abraknyde');
-INSERT INTO `donjons` VALUES (8905, 754, '7908', 'Koulosse');
-INSERT INTO `donjons` VALUES (8721, 797, '8436', 'Chêne Mou');
-INSERT INTO `donjons` VALUES (8541, 784, '8320', 'Antre Dragon Cochon');
-INSERT INTO `donjons` VALUES (8467, 709, '7312', 'Firefoux');
-INSERT INTO `donjons` VALUES (8244, 1165, '7310', 'Bulbes');
-INSERT INTO `donjons` VALUES (8236, 707, '7311', 'Kitsounes');
-INSERT INTO `donjons` VALUES (8167, 706, '7309', 'Pandikaze');
-INSERT INTO `donjons` VALUES (7858, 789, '8343', 'Dragoeufs');
-INSERT INTO `donjons` VALUES (7453, 780, '8143', 'Champs');
-INSERT INTO `donjons` VALUES (6738, 800, '8438', 'Rat Noir');
-INSERT INTO `donjons` VALUES (6536, 799, '8439', 'Rat Blanc');
-INSERT INTO `donjons` VALUES (4919, 1284, '11475', 'Qu\'Tan');
-INSERT INTO `donjons` VALUES (4786, 712, '6884', 'Bworker');
-INSERT INTO `donjons` VALUES (4383, 1038, '11474', 'Ilyzaelle');
-INSERT INTO `donjons` VALUES (2985, 774, '7926', 'Maitre Corbac');
-INSERT INTO `donjons` VALUES (2109, -1, '1570', 'Squelette');
-INSERT INTO `donjons` VALUES (1856, 174, '1568', 'Bouftou');
-INSERT INTO `donjons` VALUES (1384, 777, '8156', 'Tofus');
-INSERT INTO `donjons` VALUES (1298, 781, '8139', 'Scarafeuille');
-INSERT INTO `donjons` VALUES (1130, 1162, '1569', 'Forgeron');
-INSERT INTO `donjons` VALUES (749, 772, '7927', 'Craqueleurs');
-INSERT INTO `donjons` VALUES (10509, 943, '8975', 'Tynril');
-INSERT INTO `donjons` VALUES (10722, 941, '8917', 'Grotte Hesque');
-INSERT INTO `donjons` VALUES (11066, 942, '8971', 'Arche Oto');
-INSERT INTO `donjons` VALUES (11136, 946, '8977', 'Kimbo');
-INSERT INTO `donjons` VALUES (11260, 945, '8972', 'Rasboul');
-INSERT INTO `donjons` VALUES (11878, 1034, '9248', 'Blop');
-INSERT INTO `donjons` VALUES (11891, 1034, '9254', 'Blop Multicolore');
-INSERT INTO `donjons` VALUES (11927, 1036, '9247', 'Fungus');
-INSERT INTO `donjons` VALUES (9877, 783, '8307', 'Minotot');
 -- ----------------------------
 -- Table structure for drops
 -- ----------------------------
@@ -345,12 +267,12 @@ INSERT INTO `drops` VALUES ('Gelée Royale Menthe', 85, 'Crystal O\'Boul', 706, 
 INSERT INTO `drops` VALUES ('Gelée Royale Menthe', 85, 'Graisse de Gelée', 1983, 100.000, 100.000, 100.000, 100.000, 100.000, 0, '1', 20);
 INSERT INTO `drops` VALUES ('Gelée Royale Menthe', 85, 'Gelée Menthe Royale', 2241, 20.000, 20.000, 20.000, 20.000, 20.000, 0, '-1', -1);
 INSERT INTO `drops` VALUES ('Gelée Royale Menthe', 85, 'Cape du Désir O\'Boul', 7011, 0.050, 0.075, 0.100, 0.125, 0.150, 550, '-1', -1);
-INSERT INTO `drops` VALUES ('Gelée Royale Fraise', 86, 'Kryst O\'Boul', 204, 0.050, 0.075, 0.100, 0.125, 0.150, 550, '-1', -1);
-INSERT INTO `drops` VALUES ('Gelée Royale Fraise', 86, 'Gelée à la Fraise', 368, 100.000, 100.000, 100.000, 100.000, 100.000, 0, '-1', -1);
-INSERT INTO `drops` VALUES ('Gelée Royale Fraise', 86, 'Crystal O\'Boul', 706, 0.050, 0.075, 0.100, 0.125, 0.150, 550, '-1', -1);
-INSERT INTO `drops` VALUES ('Gelée Royale Fraise', 86, 'Graisse de Gelée', 1983, 100.000, 100.000, 100.000, 100.000, 100.000, 0, '1', 20);
-INSERT INTO `drops` VALUES ('Gelée Royale Fraise', 86, 'Gelée Fraise Royale', 2242, 20.000, 20.000, 20.000, 20.000, 20.000, 0, '-1', -1);
-INSERT INTO `drops` VALUES ('Gelée Royale Fraise', 86, 'Cape du Désir O\'Boul', 7011, 0.050, 0.075, 0.100, 0.125, 0.150, 550, '-1', -1);
+INSERT INTO `drops` VALUES ('Gelé e Royale Fraise', 86, 'Kryst O\'Boul', 204, 0.050, 0.075, 0.100, 0.125, 0.150, 550, '-1', -1);
+INSERT INTO `drops` VALUES ('Gelé e Royale Fraise', 86, 'Gelée à la Fraise', 368, 100.000, 100.000, 100.000, 100.000, 100.000, 0, '-1', -1);
+INSERT INTO `drops` VALUES ('Gelé e Royale Fraise', 86, 'Crystal O\'Boul', 706, 0.050, 0.075, 0.100, 0.125, 0.150, 550, '-1', -1);
+INSERT INTO `drops` VALUES ('Gelé e Royale Fraise', 86, 'Graisse de Gelée', 1983, 100.000, 100.000, 100.000, 100.000, 100.000, 0, '1', 20);
+INSERT INTO `drops` VALUES ('Gelé e Royale Fraise', 86, 'Gelée Fraise Royale', 2242, 20.000, 20.000, 20.000, 20.000, 20.000, 0, '-1', -1);
+INSERT INTO `drops` VALUES ('Gelé e Royale Fraise', 86, 'Cape du Désir O\'Boul', 7011, 0.050, 0.075, 0.100, 0.125, 0.150, 550, '-1', -1);
 INSERT INTO `drops` VALUES ('DragOeuf Doré', 87, 'Coquille de Dragoeuf Doré ', 842, 20.000, 25.000, 30.000, 35.000, 40.000, 0, '-1', -1);
 INSERT INTO `drops` VALUES ('DragOeuf Doré', 87, 'DragoViande ***', 1924, 20.000, 30.000, 40.000, 50.000, 60.000, 0, '1', 70);
 INSERT INTO `drops` VALUES ('DragOeuf de Saphir', 88, 'Pierre de Saphir', 546, 1.000, 2.000, 3.000, 4.000, 5.000, 400, '-1', -1);
