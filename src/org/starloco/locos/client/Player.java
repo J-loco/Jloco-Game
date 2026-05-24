@@ -4164,6 +4164,42 @@ public class Player implements Scripted<SPlayer>, Actor {
         return str;
     }
 
+    public void openZaapiMenu() {
+        if (this.fight != null) return;
+
+        String bontaList = Constant.ZAAPI.getOrDefault(Constant.ALIGNEMENT_BONTARIEN, "");
+        String brakmarList = Constant.ZAAPI.getOrDefault(Constant.ALIGNEMENT_BRAKMARIEN, "");
+        if (bontaList.isEmpty() || brakmarList.isEmpty()) return;
+
+        int areaId = this.getCurMap().getSubArea().getArea().getId();
+        int alignment = this.getAlignment();
+        String[] zaapis;
+        int price = 20;
+
+        if (areaId == 7 && (alignment == 1 || alignment == 0 || alignment == 3)) {
+            zaapis = bontaList.split(",");
+            if (alignment == Constant.ALIGNEMENT_BONTARIEN) price = 10;
+        } else if (areaId == 11 && (alignment == 2 || alignment == 0 || alignment == 3)) {
+            zaapis = brakmarList.split(",");
+            if (alignment == Constant.ALIGNEMENT_BRAKMARIEN) price = 10;
+        } else {
+            String neutralList = Constant.ZAAPI.getOrDefault(Constant.ALIGNEMENT_NEUTRE, "");
+            if (neutralList.isEmpty()) return;
+            zaapis = neutralList.split(",");
+        }
+
+        if (zaapis.length == 0 || (zaapis.length == 1 && zaapis[0].isEmpty())) return;
+
+        StringBuilder list = new StringBuilder();
+        for (int i = 0; i < zaapis.length; i++) {
+            if (i > 0) list.append("|");
+            list.append(zaapis[i]).append(";").append(price);
+        }
+
+        this.setExchangeAction(new ExchangeAction<>(ExchangeAction.IN_ZAPPI, 0));
+        SocketManager.GAME_SEND_ZAAPI_PACKET(this, list.toString());
+    }
+
     public void openZaapMenu() {
         if (this.fight == null) {
             if (!verifOtomaiZaap())
