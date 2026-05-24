@@ -3767,8 +3767,19 @@ public class Player implements Scripted<SPlayer>, Actor {
 
     public void useCraftSkill(int skillId, int ingredientsCount) {
         setAway(true);
-        setExchangeAction(new ExchangeAction<>(ExchangeAction.CRAFTING, skillId));
-
+        JobStat sm = getMetierBySkill(skillId);
+        if (sm == null) return;
+        JobAction jobAction = null;
+        for (JobAction ja : JobConstant.getPosActionsToJob(sm.getTemplate().getId(), sm.get_lvl())) {
+            if (ja.getId() == skillId) {
+                jobAction = ja;
+                break;
+            }
+        }
+        if (jobAction == null) return;
+        jobAction.player = this;
+        jobAction.setSM(sm);
+        setExchangeAction(new ExchangeAction<>(ExchangeAction.CRAFTING, jobAction));
         SocketManager.GAME_SEND_ECK_PACKET(this, 3, ingredientsCount + ";" + skillId);
     }
 

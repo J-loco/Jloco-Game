@@ -63,7 +63,7 @@ public class CommandAdmin extends AdminUser {
         try {
             Group groupe = this.getPlayer().getGroup();
             if (groupe == null) {
-                this.getClient().kick();
+                this.sendMessage("Vous n'avez pas les droits.");
                 return;
             }
             if (!groupe.haveCommand(command)) {

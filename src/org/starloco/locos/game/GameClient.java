@@ -746,8 +746,8 @@ public class GameClient {
 
     private void authorisedCommand(String packet) {
         if (this.adminUser == null) this.adminUser = new CommandAdmin(this.player);
-        if (this.player.getGroup() == null || this.getPlayer() == null) {
-            this.getAccount().getGameClient().kick();
+        if (this.getPlayer() == null || this.player.getGroup() == null) {
+            this.player.sendMessage("Vous n'avez pas les droits.");
             return;
         }
 
@@ -2355,63 +2355,41 @@ public class GameClient {
                 break;
 
             case ExchangeAction.CRAFTING:
-                int skillID = (Integer) this.player.getExchangeAction().getValue();
+                if (!(this.player.getExchangeAction().getValue() instanceof JobAction)) break;
+                JobAction craftJobAction = (JobAction) this.player.getExchangeAction().getValue();
 
-                switch(packet.charAt(2)) {
-                    case 'O':
-                        break;
-                    case 'R':
-                        break;
-                    case 'r':
-                        break;
+                if (packet.charAt(2) == 'O' && craftJobAction.getJobCraft() == null) {
+                    String craftPacket = packet.replace("-", ";-").replace("+", ";+").substring(4);
+                    for (String part : craftPacket.split(";")) {
+                        try {
+                            if (part.isEmpty()) continue;
+                            char c = part.charAt(0);
+                            String[] infos = part.substring(1).split("\\|");
+                            int id = Integer.parseInt(infos[0]), quantity = 1;
+                            try { quantity = Integer.parseInt(infos[1]); } catch (Exception ignored) {}
+                            if (quantity <= 0) return;
+                            if (c == '+') {
+                                if (!this.player.hasItemGuid(id)) return;
+                                GameObject obj = this.player.getItems().get(id);
+                                if (obj == null || obj.getObvijevanLook() != 0) { player.send("BN"); return; }
+                                if (obj.getQuantity() < quantity) quantity = obj.getQuantity();
+                                craftJobAction.addIngredient(this.player, id, quantity);
+                            } else if (c == '-') {
+                                craftJobAction.addIngredient(this.player, id, -quantity);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else if (packet.charAt(2) == 'R') {
+                    if (craftJobAction.getJobCraft() == null)
+                        craftJobAction.setJobCraft(craftJobAction.oldJobCraft);
+                    if (craftJobAction.getJobCraft() != null)
+                        craftJobAction.getJobCraft().setAction(Integer.parseInt(packet.substring(3)));
+                } else if (packet.charAt(2) == 'r') {
+                    if (craftJobAction.getJobCraft() != null)
+                        craftJobAction.broke = true;
                 }
-
-//                if (packet.charAt(2) == 'O' && ((JobAction) this.player.getExchangeAction().getValue()).getJobCraft() == null) {
-//                    packet = packet.replace("-", ";-").replace("+", ";+").substring(4);
-//
-//                    for(String part : packet.split(";")) {
-//                        try {
-//                            char c = part.charAt(0);
-//                            String[] infos = part.substring(1).split("\\|");
-//                            int id = Integer.parseInt(infos[0]), quantity = 1;
-//                            try {
-//                                quantity = Integer.parseInt(infos[1]);
-//                            } catch (Exception ignored) {}
-//
-//                            if (quantity <= 0) return;
-//                            if (c == '+') {
-//                                if (!this.player.hasItemGuid(id))
-//                                    return;
-//
-//                                GameObject obj = this.player.getItems().get(id);
-//
-//                                if (obj == null || obj.getObvijevanLook() != 0) {
-//                                    player.send("BN");
-//                                    return;
-//                                }
-//                                if (obj.getQuantity() < quantity)
-//                                    quantity = obj.getQuantity();
-//
-//                                ((JobAction) this.player.getExchangeAction().getValue()).addIngredient(this.player, id, quantity);
-//                            } else if (c == '-') {
-//                                ((JobAction) this.player.getExchangeAction().getValue()).addIngredient(this.player, id, -quantity);
-//                            }
-//                        } catch(Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                } else if (packet.charAt(2) == 'R') {
-//                    if (((JobAction) this.player.getExchangeAction().getValue()).getJobCraft() == null) {
-//                        ((JobAction) this.player.getExchangeAction().getValue()).setJobCraft(((JobAction) this.player.getExchangeAction().getValue()).oldJobCraft);
-//                    }
-//                    ((JobAction) this.player.getExchangeAction().getValue()).getJobCraft().setAction(Integer.parseInt(packet.substring(3)));
-//                } else if (packet.charAt(2) == 'r') {
-//                    if (this.player.getExchangeAction().getValue() != null) {
-//                        if (((JobAction) this.player.getExchangeAction().getValue()).getJobCraft() != null) {
-//                            ((JobAction) this.player.getExchangeAction().getValue()).broken = true;
-//                        }
-//                    }
-//                }
                 break;
 
             case ExchangeAction.IN_BANK:

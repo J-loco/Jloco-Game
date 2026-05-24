@@ -75,6 +75,10 @@ public class JobAction {
         return this.SM;
     }
 
+    public void setSM(JobStat sm) {
+        this.SM = sm;
+    }
+
     public JobCraft getJobCraft() {
         return this.jobCraft;
     }
