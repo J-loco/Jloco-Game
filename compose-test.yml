@@ -30,6 +30,23 @@ services:
       test: ["CMD-SHELL", "mariadb-admin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD}"]
       timeout: 20s
       retries: 10
+  # Web portal + Flash data server (serves StarLoco-Web at http://127.0.0.1/dofus)
+  starloco_web:
+    build:
+      context: ../StarLoco-Web
+    restart: always
+    networks:
+      - starloco
+    ports:
+      - '127.0.0.1:80:80'
+    volumes:
+      - ../StarLoco-Web:/var/www/html/dofus
+    environment:
+      DB_HOST: starloco_mariadb
+      DB_PASS: CYoEw5SaBv1kIk
+    depends_on:
+      starloco_mariadb:
+        condition: service_healthy
   # Login
   starloco_login:
     image: starloco/login:latest
