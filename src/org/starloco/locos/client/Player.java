@@ -3071,6 +3071,9 @@ public class Player implements Scripted<SPlayer>, Actor {
             return;
         }
 
+        if (this.useMountParkSkill(skillID))
+            return;
+
         DataScriptVM.getInstance().handlers.onSkillUse(this, cellID, skillID);
     }
 
@@ -3616,6 +3619,77 @@ public class Player implements Scripted<SPlayer>, Actor {
      * MountPark *
      * @param target
      */
+    private boolean useMountParkSkill(int skillID) {
+        if (skillID < 175 || skillID > 178)
+            return false;
+
+        MountPark park = this.curMap == null ? null : this.curMap.getMountPark();
+        if (park == null)
+            return true;
+
+        switch (skillID) {
+            case 175:
+                try {
+                    park.getEtable().stream()
+                            .filter(Objects::nonNull)
+                            .forEach(mount -> mount.checkBaby(this, park));
+                    park.getListOfRaising().stream()
+                            .filter(mountId -> World.world.getMountById(mountId) != null)
+                            .forEach(mountId -> World.world.getMountById(mountId).checkBaby(this, park));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (park.getGuild() != null) {
+                    for (Player target : park.getGuild().getPlayers()) {
+                        if (target != null
+                                && target.getExchangeAction() != null
+                                && target.getExchangeAction().getType() == ExchangeAction.IN_MOUNTPARK
+                                && target.getCurMap().getId() == this.curMap.getId()) {
+                            this.send("Im120");
+                            return true;
+                        }
+                    }
+                }
+
+                this.openMountPark(null);
+                return true;
+            case 176:
+                if (park.getOwner() == -1) {
+                    SocketManager.GAME_SEND_Im_PACKET(this, "196");
+                    return true;
+                }
+                if (park.getPrice() == 0) {
+                    SocketManager.GAME_SEND_Im_PACKET(this, "197");
+                    return true;
+                }
+                if (this.getGuild() == null) {
+                    SocketManager.GAME_SEND_Im_PACKET(this, "1135");
+                    return true;
+                }
+                if (this.getGuildMember().getRank() != 1) {
+                    SocketManager.GAME_SEND_Im_PACKET(this, "198");
+                    return true;
+                }
+                SocketManager.GAME_SEND_R_PACKET(this, "D" + park.getPrice() + "|" + park.getPrice());
+                return true;
+            case 177:
+            case 178:
+                if (park.getOwner() == -1) {
+                    SocketManager.GAME_SEND_Im_PACKET(this, "194");
+                    return true;
+                }
+                if (park.getOwner() != this.getId()) {
+                    SocketManager.GAME_SEND_Im_PACKET(this, "195");
+                    return true;
+                }
+                SocketManager.GAME_SEND_R_PACKET(this, "D" + park.getPrice() + "|" + park.getPrice());
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public void openMountPark(MountPark target) {
         if (this.getDeshonor() >= 5) {
             SocketManager.GAME_SEND_Im_PACKET(this, "183");
