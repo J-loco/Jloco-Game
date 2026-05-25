@@ -493,6 +493,7 @@ public class GameObject {
                 int cantMod = modificable.length;
                 for (int j = 0; j < cantMod; j++) {
                     String[] mod = modificable[j].split("#");
+                    if (mod.length < 4) continue;
                     if (Integer.parseInt(mod[0], 16) == statID) {
                         String jet = "0d0+" + Integer.parseInt(mod[1], 16);
                         if (!isFirst)

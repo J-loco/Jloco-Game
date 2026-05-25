@@ -544,7 +544,9 @@ public class Player implements Scripted<SPlayer>, Actor {
 
     public static String getCompiledEmote(List<Integer> i) {
         int i2 = 0;
-        for (Integer b : i) i2 += (2 << (b - 2));
+        for (Integer b : i) {
+            if (b >= 1) i2 += (1 << (b - 1));
+        }
         return i2 + "|0";
     }
 
