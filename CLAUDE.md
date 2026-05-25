@@ -109,9 +109,11 @@ The `drops` table columns: `objectId`, `monsterId`, `percentGrade1`–`percentGr
 
 **Drop pipeline in `Fight.java`:**
 - `4595–4628` — splits dead mob's drops into `dropsPlayers` (action != 1) and `dropsMeats` (action == 1)
-- `4856–4976` — per-winner roll: `chance = localPercent × prospecting × conquestBonus × challengeFactor × starFactor × Config.rateDrop`
-- `4978–4998` — meat path: delivers to inventory only if weapon effect 795 is equipped
+- `4856–4976` — per-winner roll: `chance = localPercent × prospecting × conquestBonus × challengeFactor × starFactor × Config.rateDrop`; `getDropSuccessCount(chance)` converts overflow chance into item count (`250%` = 2 guaranteed + 50% roll), so a player can drop multiple copies of the same resource in one fight
+- `4978–4998` — meat path: delivers to inventory only if weapon effect 795 is equipped; also uses `getDropSuccessCount(chance)` so hunter meat can stack when chance exceeds 100%
 - `5040–5092` — builds `dropsToAttribute`, then `TimerWaiter.addNext` gives items after 1 second
+
+**Multiple-copy drop fix (2026-05-25):** The fight reward code used to treat each successful drop row as a boolean, so an effective chance above 100% still awarded only one item for that drop line. `Fight.getDropSuccessCount(double chance)` now returns guaranteed copies for each full 100%, plus one roll for the remainder. Regular drops, hunter meat drops, and collector drops use this helper. Keep action `-2`, quest/action `4`, action `5`, and action `7` capped at one item because those are intentionally unique or quest-gated paths.
 
 **`DropData.loadFully()` (`database/data/game/DropData.java`):** Clears all monster drops, then re-attaches from DB. Silently skips any row where `getObjTemplate(objectId) == null` OR `getMonstre(monsterId) == null`. Check server logs for "loaded successfully" to confirm.
 

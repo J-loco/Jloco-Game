@@ -1,7 +1,5 @@
 package org.starloco.locos.fight;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
@@ -4644,7 +4642,6 @@ public class Fight {
             }
             winners.clear();
             winners.addAll(temporary1);
-            final NumberFormat formatter = new DecimalFormat("#0.000");
             //endregion
 
             //region Stalk
@@ -4857,8 +4854,6 @@ public class Fight {
                             double prospecting = i.getPros() / 100.0;
                             if (prospecting < 1) prospecting = 1;
 
-
-                            final double jet = Math.random() * 100;
                             final double chance = drop.getLocalPercent() * prospecting * World.world.getConquestBonus(player) * challengeFactor * starFactor * Config.rateDrop;
                             boolean ok = false;
 
@@ -4868,17 +4863,21 @@ public class Fight {
                                         ok = true;
                                     break;
                             }
-                            if (jet < chance || ok) {
+                            int dropCount = Fight.getDropSuccessCount(chance);
+                            if (ok && dropCount == 0) dropCount = 1;
+
+                            if (dropCount > 0) {
                                 ObjectTemplate objectTemplate = World.world.getObjTemplate(drop.getObjectId());
 
                                 if (objectTemplate == null)
                                     continue;
 
-                                quantity = 1;
+                                quantity = dropCount;
                                 boolean itsOk = false, unique = false;
                                 switch (drop.getAction()) {
                                     case -2:
                                         unique = true;
+                                        quantity = 1;
                                         itsOk = true;
                                         break;
                                     case -1:// All items without condition.
@@ -4923,11 +4922,13 @@ public class Fight {
                                     case 4: // Quete
                                         if (World.world.getConditionManager().validConditions(player, "QE=" + drop.getCondition()))
                                             itsOk = true;
+                                        quantity = 1;
                                         break;
 
                                     case 5: // Dropable une seule fois
                                         if (player == null) break;
                                         if (player.getNbItemTemplate(objectTemplate.getId()) > 0) break;
+                                        quantity = 1;
                                         itsOk = true;
                                         break;
 
@@ -4948,6 +4949,7 @@ public class Fight {
                                         if (player == null) break;
                                         if (player.hasItemTemplate(objectTemplate.getId(), 1, false))
                                             break;
+                                        quantity = 1;
                                         for (String id : drop.getCondition().split(",")) {
                                             if (id.equals(String.valueOf(this.getMap().getId()))) {
                                                 itsOk = true;
@@ -4957,7 +4959,9 @@ public class Fight {
 
                                     case 8:// Win a specific quantity
                                         String[] split = drop.getCondition().split(",");
-                                        quantity = Formulas.getRandomValue(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
+                                        quantity = 0;
+                                        for (int count = 0; count < dropCount; count++)
+                                            quantity += Formulas.getRandomValue(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
                                         itsOk = true;
                                         break;
 
@@ -4985,14 +4989,14 @@ public class Fight {
 
                             if (ok) {
                                 for (Drop drop : temporary) {
-                                    final double jet = Double.parseDouble(formatter.format(Math.random() * 100).replace(',', '.')),
-                                            chance = Double.parseDouble(formatter.format(drop.getLocalPercent() * (i.getPros() / 100.0)).replace(',', '.'));
+                                    final double chance = drop.getLocalPercent() * (i.getPros() / 100.0);
 
-                                    if (jet < chance) {
+                                    int dropCount = Fight.getDropSuccessCount(chance);
+                                    if (dropCount > 0) {
                                         ObjectTemplate objectTemplate = World.world.getObjTemplate(drop.getObjectId());
 
                                         if (drop.getAction() == 1 && objectTemplate != null && player.getMetierByID(41) != null && player.getMetierByID(41).get_lvl() >= drop.getLevel())
-                                            itemWon2.put(objectTemplate.getId(), (itemWon2.get(objectTemplate.getId()) == null ? 0 : itemWon2.get(objectTemplate.getId())) + 1);
+                                            itemWon2.put(objectTemplate.getId(), (itemWon2.get(objectTemplate.getId()) == null ? 0 : itemWon2.get(objectTemplate.getId())) + dropCount);
                                     }
                                 }
                             }
@@ -5455,10 +5459,10 @@ public class Fight {
 
                 if (collector.getPodsTotal() < collector.getMaxPod()) {
                     for (Drop drop : temporary) {
-                        final double jet = Double.parseDouble(formatter.format(Math.random() * 100).replace(',', '.')),
-                                chance = (int) (drop.getLocalPercent() * (World.world.getGuild(collector.getGuildId()).getStats(Constant.STATS_ADD_PROS) / 100.0));
+                        final double chance = (int) (drop.getLocalPercent() * (World.world.getGuild(collector.getGuildId()).getStats(Constant.STATS_ADD_PROS) / 100.0));
 
-                        if (jet < chance) {
+                        int dropCount = Fight.getDropSuccessCount(chance);
+                        if (dropCount > 0) {
                             ObjectTemplate objectTemplate = World.world.getObjTemplate(drop.getObjectId());
 
                             if (objectTemplate == null)
@@ -5468,6 +5472,7 @@ public class Fight {
                             switch (drop.getAction()) {
                                 case -2:
                                     unique = true;
+                                    dropCount = 1;
                                     itsOk = true;
                                     break;
                                 case -1:// All items without condition.
@@ -5529,7 +5534,7 @@ public class Fight {
                             }
 
                             if (itsOk) {
-                                objectsWon.put(objectTemplate.getId(), (objectsWon.get(objectTemplate.getId()) == null ? 0 : objectsWon.get(objectTemplate.getId())) + 1);
+                                objectsWon.put(objectTemplate.getId(), (objectsWon.get(objectTemplate.getId()) == null ? 0 : objectsWon.get(objectTemplate.getId())) + dropCount);
 
                                 if (unique)
                                     dropsPlayers.remove(drop);
@@ -5730,6 +5735,15 @@ public class Fight {
             }
             SocketManager.GAME_SEND_GAF_PACKET_TO_FIGHT(this, 7, 0, fighter.getId());
         }
+    }
+
+    private static int getDropSuccessCount(double chance) {
+        if (chance <= 0) return 0;
+
+        int guaranteed = (int) (chance / 100);
+        double remainder = chance - (guaranteed * 100);
+
+        return guaranteed + (Math.random() * 100 < remainder ? 1 : 0);
     }
 
     public static Map<Player, String> give(ArrayList<GameObject> objects, ArrayList<Fighter> winners) {
