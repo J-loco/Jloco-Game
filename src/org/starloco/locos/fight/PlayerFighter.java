@@ -133,7 +133,7 @@ public class PlayerFighter extends Fighter {
 
     @Override
     Optional<Mount> getMount() {
-        return Optional.ofNullable(player.getMount());
+        return player.isOnMount() ? Optional.ofNullable(player.getMount()) : Optional.empty();
     }
 
     public int[] getColors() {
