@@ -5076,12 +5076,7 @@ public class Fight {
                                 } else {
                                     GameObject newObj = World.world.getObjTemplate(template.getId()).createNewItemWithoutDuplication(target.getItems().values(), entry.getValue(), false);
                                     if (World.world.getObjTemplate(template.getId()).getType() == Constant.ITEM_TYPE_CERTIF_MONTURE) {
-                                        //obj.setMountStats(this.getPlayer(), null);
-                                        Mount mount = new Mount(Constant.getMountColorByParchoTemplate(newObj.getTemplate().getId()), target.getId(), false);
-                                        newObj.clearStats();
-                                        newObj.getStats().addOneStat(995, mount.getId());
-                                        newObj.getTxtStat().put(996, target.getName());
-                                        newObj.getTxtStat().put(997, mount.getName());
+                                        Mount mount = newObj.setMountStats(target, null, false);
                                         mount.setToMax();
                                     }
 

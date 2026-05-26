@@ -314,6 +314,8 @@ public class GameObject {
         this.getStats().addOneStat(995, (mount.getId()));
         this.getTxtStat().put(996, player.getName());
         this.getTxtStat().put(997, mount.getName());
+        if (this.getGuid() > 0)
+            DatabaseManager.get(ObjectData.class).update(this);
         return mount;
     }
 

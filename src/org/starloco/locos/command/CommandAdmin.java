@@ -1735,12 +1735,7 @@ public class CommandAdmin extends AdminUser {
 
 
             if(t.getType() == Constant.ITEM_TYPE_CERTIF_MONTURE) {
-                //obj.setMountStats(this.getPlayer(), null);
-                Mount mount = new Mount(Constant.getMountColorByParchoTemplate(obj.getTemplate().getId()), this.getPlayer().getId(), false);
-                obj.clearStats();
-                obj.getStats().addOneStat(995, (mount.getId()));
-                obj.getTxtStat().put(996, this.getPlayer().getName());
-                obj.getTxtStat().put(997, mount.getName());
+                Mount mount = obj.setMountStats(this.getPlayer(), null, false);
                 mount.setToMax();
             }
             if(lier) {

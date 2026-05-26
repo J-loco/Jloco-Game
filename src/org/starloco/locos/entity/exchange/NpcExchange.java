@@ -124,12 +124,7 @@ public class NpcExchange {
                 World.world.addGameObject(obj1);
 
             if (t.getType() == Constant.ITEM_TYPE_CERTIF_MONTURE) {
-                //obj.setMountStats(this.getPlayer(), null);
-                Mount mount = new Mount(Constant.getMountColorByParchoTemplate(obj1.getTemplate().getId()), this.player.getId(), false);
-                obj1.clearStats();
-                obj1.getStats().addOneStat(995, (mount.getId()));
-                obj1.getTxtStat().put(996, this.player.getName());
-                obj1.getTxtStat().put(997, mount.getName());
+                Mount mount = obj1.setMountStats(this.player, null, false);
                 mount.setToMax();
             }
 

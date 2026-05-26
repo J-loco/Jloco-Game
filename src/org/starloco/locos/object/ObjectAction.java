@@ -881,11 +881,7 @@ public class ObjectAction {
                         template = templates.get(Formulas.random.nextInt(templates.size()));
 
                         obj = template.createNewItem(1, false);
-                        Mount mount = new Mount(Constant.getMountColorByParchoTemplate(template.getId()), player.getId(), false);
-                        obj.clearStats();
-                        obj.getStats().addOneStat(995, (mount.getId()));
-                        obj.getTxtStat().put(996, player.getName());
-                        obj.getTxtStat().put(997, mount.getName());
+                        Mount mount = obj.setMountStats(player, null, false);
                         mount.setCastrated();
                         mount.setToMax();
 
