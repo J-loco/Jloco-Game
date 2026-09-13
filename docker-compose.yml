@@ -20,7 +20,7 @@ services:
     networks:
       - starloco
     environment:
-      MYSQL_ROOT_PASSWORD: CYoEw5SaBv1kIk
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD in StarLoco-Game/.env (see .env.example)}
     ports:
       - '127.0.0.1:3306:3306'
     volumes:
@@ -32,6 +32,7 @@ services:
       retries: 10
   # Web portal + Flash data server (serves StarLoco-Web at http://127.0.0.1/dofus)
   starloco_web:
+    image: starloco/web:local
     build:
       context: ../StarLoco-Web
     restart: always
@@ -43,13 +44,44 @@ services:
       - ../StarLoco-Web:/var/www/html/dofus
     environment:
       DB_HOST: starloco_mariadb
-      DB_PASS: CYoEw5SaBv1kIk
+      # Least-privilege account created by starloco_web_migrate (never root).
+      DB_USER: starloco_web
+      DB_PASS: ${WEB_DB_PASSWORD:?set WEB_DB_PASSWORD in StarLoco-Game/.env (see .env.example)}
+      LOGIN_HOST: starloco_login
+      GAME_HOST: starloco_game
+      APP_URL: ${WEB_APP_URL:-http://127.0.0.1/dofus/}
+      APP_DEBUG: ${WEB_APP_DEBUG:-0}
+      TRUST_CLOUDFLARE: ${WEB_TRUST_CLOUDFLARE:-0}
+      DEDIPASS_PUBLIC_KEY: ${WEB_DEDIPASS_PUBLIC_KEY:-}
+    depends_on:
+      starloco_web_migrate:
+        condition: service_completed_successfully
+  # One-off: applies StarLoco-Web/migrations and provisions the starloco_web DB user, then exits.
+  # Re-run by hand with: docker compose run --rm starloco_web_migrate
+  starloco_web_migrate:
+    image: starloco/web:local
+    build:
+      context: ../StarLoco-Web
+    restart: "no"
+    networks:
+      - starloco
+    volumes:
+      - ../StarLoco-Web:/var/www/html/dofus
+    command: ["php", "bin/migrate"]
+    environment:
+      DB_HOST: starloco_mariadb
+      DB_USER: root
+      DB_PASS: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD in StarLoco-Game/.env (see .env.example)}
+      WEB_DB_USER: starloco_web
+      WEB_DB_PASSWORD: ${WEB_DB_PASSWORD:?set WEB_DB_PASSWORD in StarLoco-Game/.env (see .env.example)}
     depends_on:
       starloco_mariadb:
         condition: service_healthy
   # Login
   starloco_login:
-    image: starloco/login:latest
+#    image: starloco/login:latest
+    build:
+      context: ../StarLoco-Web
     restart: always
     networks:
       - starloco
@@ -64,6 +96,9 @@ services:
   # Game
   starloco_game:
     image: starloco/game:latest
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
     restart: always
     networks:
       - starloco
@@ -77,9 +112,7 @@ services:
         condition: service_started
       starloco_mariadb:
         condition: service_healthy
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
+
 networks:
   starloco:
 
