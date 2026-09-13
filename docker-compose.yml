@@ -30,31 +30,43 @@ services:
       test: ["CMD-SHELL", "mariadb-admin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD}"]
       timeout: 20s
       retries: 10
-  # Web portal + Flash data server (serves StarLoco-Web at http://127.0.0.1/dofus)
+  # Web portal + game client data (lang/) + launcher endpoints, at http://127.0.0.1/dofus
   starloco_web:
     image: starloco/web:local
     build:
       context: ../StarLoco-Web
+      target: runtime
     restart: always
     networks:
       - starloco
     ports:
       - '127.0.0.1:80:80'
     volumes:
-      - ../StarLoco-Web:/var/www/html/dofus
+      - ../StarLoco-Web:/var/www/starloco-web
     environment:
+      APP_URL: ${WEB_APP_URL:-http://127.0.0.1/dofus/}
+      APP_BASE_PATH: ${WEB_APP_BASE_PATH:-/dofus}
+      APP_DEBUG: ${WEB_APP_DEBUG:-0}
+      TRUST_CLOUDFLARE: ${WEB_TRUST_CLOUDFLARE:-0}
+      SITE_NAME: ${WEB_SITE_NAME:-StarLoco}
+      ADMIN_ACCOUNT_ID: ${WEB_ADMIN_ACCOUNT_ID:-1}
       DB_HOST: starloco_mariadb
       # Least-privilege account created by starloco_web_migrate (never root).
       DB_USER: starloco_web
       DB_PASS: ${WEB_DB_PASSWORD:?set WEB_DB_PASSWORD in StarLoco-Game/.env (see .env.example)}
       LOGIN_HOST: starloco_login
       GAME_HOST: starloco_game
-      APP_URL: ${WEB_APP_URL:-http://127.0.0.1/dofus/}
-      APP_DEBUG: ${WEB_APP_DEBUG:-0}
-      TRUST_CLOUDFLARE: ${WEB_TRUST_CLOUDFLARE:-0}
+      GAME_SERVER_ID: ${WEB_GAME_SERVER_ID:-601}
+      FORUM_URL: ${WEB_FORUM_URL:-}
+      FORUM_RSS_URL: ${WEB_FORUM_RSS_URL:-}
+      DOWNLOAD_URL: ${WEB_DOWNLOAD_URL:-}
+      VOTE_URL: ${WEB_VOTE_URL:-https://www.rpg-paradize.com/}
+      VOTE_POINTS: ${WEB_VOTE_POINTS:-5}
       DEDIPASS_PUBLIC_KEY: ${WEB_DEDIPASS_PUBLIC_KEY:-}
     depends_on:
       starloco_web_migrate:
+        condition: service_completed_successfully
+      starloco_web_assets:
         condition: service_completed_successfully
   # One-off: applies StarLoco-Web/migrations and provisions the starloco_web DB user, then exits.
   # Re-run by hand with: docker compose run --rm starloco_web_migrate
@@ -62,11 +74,12 @@ services:
     image: starloco/web:local
     build:
       context: ../StarLoco-Web
+      target: runtime
     restart: "no"
     networks:
       - starloco
     volumes:
-      - ../StarLoco-Web:/var/www/html/dofus
+      - ../StarLoco-Web:/var/www/starloco-web
     command: ["php", "bin/migrate"]
     environment:
       DB_HOST: starloco_mariadb
@@ -77,6 +90,16 @@ services:
     depends_on:
       starloco_mariadb:
         condition: service_healthy
+  # One-off: builds StarLoco-Web/public/assets/app.css with Tailwind, then exits.
+  # Rebuild after editing templates: docker compose run --rm starloco_web_assets
+  starloco_web_assets:
+    image: starloco/web-assets:local
+    build:
+      context: ../StarLoco-Web
+      target: tailwind
+    restart: "no"
+    volumes:
+      - ../StarLoco-Web:/app
   # Login
   starloco_login:
 #    image: starloco/login:latest
