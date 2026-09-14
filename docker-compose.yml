@@ -159,8 +159,9 @@ services:
       - ../StarLoco-Client/resources/app/retroclient/clips/items:/clips:ro
   # Login
   starloco_login:
-    # Built from StarLoco-Login (JUnit tests run during the build). The previous Docker Hub image,
-    # starloco/login:latest, does not understand PBKDF2 password hashes.
+    # Built from StarLoco-Login (Java 21; formatting, static analysis and unit tests run during the build).
+    # It speaks exchange protocol v2: the game server must be built from the same revision
+    # (./gradlew jar in StarLoco-Game before building starloco_game). Healthcheck: see its Dockerfile.
     image: starloco/login:local
     build:
       context: ../StarLoco-Login
@@ -193,6 +194,8 @@ services:
       starloco_redis:
         condition: service_started
       starloco_mariadb:
+        condition: service_healthy
+      starloco_login:
         condition: service_healthy
 
 networks:
