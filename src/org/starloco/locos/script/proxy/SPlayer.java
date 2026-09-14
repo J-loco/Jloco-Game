@@ -147,7 +147,7 @@ public class SPlayer extends DefaultUserdata<Player> {
     @SuppressWarnings("unused")
     private static void useCraftSkill(Player p, ArgumentIterator args) {
         int skillId = args.nextInt();
-        int ingredientsCount = args.nextInt();
+        int ingredientsCount = args.nextOptionalInt(0); // 0: slot count from the Java job tables
 
         p.useCraftSkill(skillId, ingredientsCount);
     }

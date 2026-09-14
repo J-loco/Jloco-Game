@@ -3841,10 +3841,19 @@ public class Player implements Scripted<SPlayer>, Actor {
         return _metiers;
     }
 
+    /**
+     * Opens the craft window of a job skill.
+     *
+     * @param ingredientsCount slots of the window; 0 uses the job tables (JobConstant.getPosActionsToJob)
+     */
     public void useCraftSkill(int skillId, int ingredientsCount) {
         setAway(true);
         JobStat sm = getMetierBySkill(skillId);
         if (sm == null) return;
+        // Like the client, which only offers a job's workshop skills while the job tool is equipped.
+        GameObject tool = getObjetByPos(Constant.ITEM_POS_ARME);
+        if (!sm.getTemplate().getTools().isEmpty() && (tool == null || !sm.getTemplate().isValidTool(tool.getTemplate().getId())))
+            return;
         JobAction jobAction = null;
         for (JobAction ja : JobConstant.getPosActionsToJob(sm.getTemplate().getId(), sm.get_lvl())) {
             if (ja.getId() == skillId) {
@@ -3853,6 +3862,8 @@ public class Player implements Scripted<SPlayer>, Actor {
             }
         }
         if (jobAction == null) return;
+        if (ingredientsCount <= 0)
+            ingredientsCount = jobAction.getMin();
         jobAction.player = this;
         jobAction.setSM(sm);
         setExchangeAction(new ExchangeAction<>(ExchangeAction.CRAFTING, jobAction));

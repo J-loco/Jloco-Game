@@ -1,6 +1,7 @@
 package org.starloco.locos.job;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,6 +60,10 @@ public class Job {
 
     public Map<Integer, ArrayList<Integer>> getCrafts() {
         return crafts;
+    }
+
+    public List<Integer> getTools() {
+        return this.tools;
     }
 
     public boolean isValidTool(int id1) {

@@ -20,5 +20,5 @@ local requirements = {jobID = jobID, toolType = toolType}
 
 registerGatherJobSkills(jobID, {toolType=toolType}, gatherSkills)
 
-registerCraftSkill(47, requirements, ingredientsForCraftJob(jobID))
-registerCraftSkill(122, requirements, ingredientsForCraftJob(jobID))
+registerCraftSkill(47, requirements)
+registerCraftSkill(122, requirements)

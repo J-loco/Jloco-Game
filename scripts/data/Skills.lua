@@ -64,7 +64,7 @@ end
 
 ---@param skillId number
 ---@param requirements SkillRequirements
----@param ingredientCountFn fun(p:Player):number
+---@param ingredientCountFn fun(p:Player):number optional: by default the Java job tables give the slot count
 function registerCraftSkill(skillId,  requirements, ingredientCountFn)
     SKILLS[skillId] = function(p, cellId)
         if not checkRequirements(p, requirements) then return end
@@ -83,7 +83,7 @@ function registerCraftSkill(skillId,  requirements, ingredientCountFn)
             end)
         end
 
-        return p:useCraftSkill(skillId, ingredientCountFn(p))
+        return p:useCraftSkill(skillId, ingredientCountFn and ingredientCountFn(p) or 0)
     end
 end
 
@@ -204,9 +204,10 @@ function ingredientsForCraftJob(jobID)
     return function(p)
         local lvl = p:jobLevel(jobID)
 
+        -- Same as JobConstant.getTotalCaseByJobLevel (integer division: "/" is a float division in Lua 5.3)
         if lvl == 100 then return 9
         elseif lvl < 10 then return 2
-        else return lvl/20 + 4 end
+        else return lvl // 20 + 3 end
     end
 end
 
