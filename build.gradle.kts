@@ -31,28 +31,22 @@ repositories {
 
 dependencies {
     implementation(libs.hikaricp)
-    implementation(libs.commons.lang)
+    implementation(libs.commons.lang3)
     implementation(libs.mina.core)
-    implementation(libs.mysql.connector)
     implementation(libs.slf4j.api)
     implementation(libs.logback.classic)
     implementation(libs.jjwt.api)
     implementation(libs.jansi)
-    implementation(libs.joda.time)
     implementation(libs.snakeyaml)
     implementation(libs.reflections)
 
+    runtimeOnly(libs.mariadb)
     runtimeOnly(libs.jjwt.impl)
     runtimeOnly(libs.jjwt.jackson)
 
     // Not published on Maven Central: the Lua VM (org.classdump.luna) and the Jep expression parser
     // (com.singularsys.jep, used by common/ConditionParser).
     implementation(files("libs/luna-all-shaded-0.4.2-SNAPSHOT.jar", "libs/jep.jar"))
-
-    constraints {
-        // jjwt-jackson 0.11.5 is built against this version; keep it whatever other libraries ask for.
-        runtimeOnly(libs.jackson.databind)
-    }
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -71,7 +65,8 @@ tasks.jar {
         )
     }
     dependsOn(configurations.runtimeClasspath)
-    from({ configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) } })
-    // Signatures of the bundled libraries would not match the merged jar.
-    exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
+    from({ configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) } }) {
+        // Signatures and module descriptors of the bundled libraries are wrong for the merged jar.
+        exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "**/module-info.class")
+    }
 }

@@ -1,8 +1,8 @@
 package org.starloco.locos.database.data.login;
 
-import com.mysql.jdbc.Statement;
+import java.sql.Statement;
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.starloco.locos.database.data.FunctionDAO;
 import org.starloco.locos.game.world.World;
 import org.starloco.locos.guild.Guild;

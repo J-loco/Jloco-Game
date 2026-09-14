@@ -1,6 +1,6 @@
 package org.starloco.locos.database.data.login;
 
-import com.mysql.jdbc.Statement;
+import java.sql.Statement;
 import com.zaxxer.hikari.HikariDataSource;
 import org.starloco.locos.database.data.FunctionDAO;
 import org.starloco.locos.game.world.World;

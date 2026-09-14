@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.starloco.locos.area.map.MapData;
 import org.starloco.locos.area.map.ScriptMapData;
 import org.starloco.locos.util.Pair;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.starloco.locos.database.data.FunctionDAO;
 import org.starloco.locos.entity.npc.Npc;
 import org.starloco.locos.game.world.World;

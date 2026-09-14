@@ -86,7 +86,7 @@ All versions go in `gradle/libs.versions.toml` and **keep the version of the jar
   reformat all of it. Worth doing only as one dedicated formatting commit agreed in advance.
 - **Library upgrades** (MINA 2.2, MariaDB Connector/J instead of mysql-connector 5.1, jjwt 0.12+, logback 1.5+,
   snakeyaml 2): these change runtime behaviour and need testing in game. They are a separate step, and much easier
-  once versions sit in the catalog.
+  once versions sit in the catalog. Done afterwards: see "Library upgrades" below.
 - **Unit tests:** the game has none; the `test` source set and JUnit can come with the first tested change.
 
 ## Verification
@@ -115,3 +115,48 @@ All versions go in `gradle/libs.versions.toml` and **keep the version of the jar
   - The only error at startup is a data issue (extra monster 2432 has no map).
 - `./gradlew build` passes; `ci.yml` and `release.yaml` pass actionlint. The old release workflow's Docker Hub README
   sync step (`peter-evans/dockerhub-description@v2`) was dropped.
+
+## Library upgrades (2026-09-14)
+
+| Library | Before | After | Code change |
+|---|---|---|---|
+| JDBC driver | mysql-connector-java 5.1.44 | MariaDB Connector/J 3.5.10 | `DatabaseManager` uses a `jdbc:mariadb://` URL; `com.mysql.jdbc.Statement` imports became `java.sql.Statement` (6 DAOs) |
+| HikariCP | 4.0.3 | 7.1.0 | none |
+| commons-lang | 2.6 | commons-lang3 3.20.0 | package rename for `NotImplementedException` (45 files) |
+| `StringEscapeUtils.unescapeJava` | commons-lang 2.6 | `common/JavaEscapes` | see below |
+| MINA | 2.0.9 | 2.2.9 | none |
+| slf4j / logback | 1.7.9 / 1.1.2 | 2.0.19 / 1.6.3 | none |
+| jjwt | 0.11.5 | 0.13.0 | `GameClient.switchCharacter` uses the non-deprecated builder (`issuer()`, `Jwts.SIG.HS256`) |
+| jansi | 1.7 | 2.4.3 | `AnsiConsole.out` is now a method |
+| snakeyaml | 1.11 | 2.7 | none |
+| joda-time | 2.6 | removed | `GuildMember` uses `java.time` |
+
+Unchanged: reflections 0.10.2 (latest release), and the vendored `luna` and `jep`.
+
+**Details:**
+- **`unescapeJava`:** commons-lang3 and commons-text decode differently from commons-lang 2.6: octal escapes, and
+  unknown or trailing backslashes. On 500,000 generated strings, commons-text decoded 69,939 of the 159,000 that
+  contain a backslash differently (44%). `CryptManager` decrypts client data with it, so `common/JavaEscapes`
+  reimplements the 2.6 behaviour: on 2,000,000 generated strings (720,953 with a backslash) it matches
+  commons-lang 2.6 exactly.
+- **Logging:** the MariaDB driver logs every query with its values at DEBUG, and the game runs with logback's
+  default DEBUG configuration. `DatabaseManager` sets `org.mariadb.jdbc` to WARN. It also fixes the HikariCP
+  `PoolBase` logger name, which had "DEBUG " in front of it and so was never silenced.
+- **Fat jar:** it no longer carries the libraries' `module-info.class` files (a merged jar isn't a module).
+- **Missing dependencies:** `jdeps` reports none for classes of the game, `luna` or `jep`. The new unresolved
+  packages are optional features of the libraries (MariaDB Unix sockets and AWS/GSSAPI authentication, logback
+  SMTP/servlet/XZ, HikariCP metrics, reflections' gson serializer).
+
+**Checked against the running stack** (test accounts removed afterwards):
+- the server started and loaded its data and Lua scripts; the login server validated it;
+- a scripted player went through the login server to game server 601:
+  - ticket (`ATK0`), character list;
+  - character creation (`AAK`, an INSERT reading the generated id back through the new driver);
+  - selection (`ASK`), entering the world (`GDM` map data);
+  - on disconnect the character was saved (map, cell, logged = 0);
+  - it was then deleted through the game (`AD`);
+- character switch: the game server's HS256 token (jjwt 0.13) was accepted by the login server;
+- no exception or warning in the game log.
+
+The module-info exclusion and the driver log level were built after those checks; restart `starloco_game` to run
+them.

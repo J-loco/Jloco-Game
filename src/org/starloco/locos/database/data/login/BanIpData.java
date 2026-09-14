@@ -1,7 +1,7 @@
 package org.starloco.locos.database.data.login;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.starloco.locos.database.data.FunctionDAO;
 
 import java.sql.PreparedStatement;

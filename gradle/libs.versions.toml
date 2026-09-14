@@ -1,31 +1,25 @@
-# Versions match the jars previously vendored in libs/: this build change must not change runtime behaviour.
-# Upgrades are a separate step (see docs/build-modernization.md).
 [versions]
-hikaricp = "4.0.3"
-commons-lang = "2.6"
-mina = "2.0.9"
-mysql-connector = "5.1.44"
-slf4j = "1.7.9"
-logback = "1.1.2"
-jjwt = "0.11.5"
-jackson = "2.12.6.1"
-jansi = "1.7"
-joda-time = "2.6"
-snakeyaml = "1.11"
+hikaricp = "7.1.0"
+commons-lang3 = "3.20.0"
+mina = "2.2.9"
+mariadb = "3.5.10"
+slf4j = "2.0.19"
+logback = "1.6.3"
+jjwt = "0.13.0"
+jansi = "2.4.3"
+snakeyaml = "2.7"
 reflections = "0.10.2"
 
 [libraries]
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
-commons-lang = { module = "commons-lang:commons-lang", version.ref = "commons-lang" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
 mina-core = { module = "org.apache.mina:mina-core", version.ref = "mina" }
-mysql-connector = { module = "mysql:mysql-connector-java", version.ref = "mysql-connector" }
+mariadb = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "mariadb" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 jansi = { module = "org.fusesource.jansi:jansi", version.ref = "jansi" }
-joda-time = { module = "joda-time:joda-time", version.ref = "joda-time" }
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 reflections = { module = "org.reflections:reflections", version.ref = "reflections" }

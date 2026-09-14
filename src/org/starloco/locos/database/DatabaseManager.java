@@ -33,7 +33,9 @@ public class DatabaseManager {
         ((Logger) LoggerFactory.getLogger("com.zaxxer.hikari.HikariDataSource")).setLevel(Level.ERROR);
         ((Logger) LoggerFactory.getLogger("com.zaxxer.hikari.HikariConfig")).setLevel(Level.ERROR);
         ((Logger) LoggerFactory.getLogger("com.zaxxer.hikari.pool.HikariPool")).setLevel(Level.ERROR);
-        ((Logger) LoggerFactory.getLogger("DEBUG com.zaxxer.hikari.pool.PoolBase")).setLevel(Level.ERROR);
+        ((Logger) LoggerFactory.getLogger("com.zaxxer.hikari.pool.PoolBase")).setLevel(Level.ERROR);
+        // The MariaDB driver traces every query (with its values) at DEBUG.
+        ((Logger) LoggerFactory.getLogger("org.mariadb.jdbc")).setLevel(Level.WARN);
 
         logger.trace("Reading database config");
         this.login = this.createHikariDataSource(Config.databaseLoginHost, String.valueOf(Config.databaseLoginPort), Config.databaseLoginName, Config.databaseLoginUser, Config.databaseLoginPass);
@@ -130,12 +132,9 @@ public class DatabaseManager {
      */
     private HikariDataSource createHikariDataSource(String host, String port, String database, String user, String pass) {
         HikariConfig config = new HikariConfig();
-        config.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
-        config.addDataSourceProperty("serverName", host);
-        config.addDataSourceProperty("port", port);
-        config.addDataSourceProperty("databaseName", database);
-        config.addDataSourceProperty("user", user);
-        config.addDataSourceProperty("password", pass);
+        config.setJdbcUrl("jdbc:mariadb://" + host + ":" + port + "/" + database);
+        config.setUsername(user);
+        config.setPassword(pass);
         config.setAutoCommit(true); // AutoCommit, c'est cool
         config.setMaximumPoolSize(20);
         config.setMinimumIdle(1);

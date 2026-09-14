@@ -1,7 +1,7 @@
 package org.starloco.locos.guild;
 
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import org.starloco.locos.client.Player;
 import org.starloco.locos.database.DatabaseManager;
 import org.starloco.locos.database.data.game.GuildMemberData;
@@ -103,8 +103,8 @@ public class GuildMember {
 
     int getHoursFromLastCo() {
         String[] split = this.lastCo.split("~");
-        LocalDate localDate = new LocalDate(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
-        return Days.daysBetween(localDate, new LocalDate()).getDays() * 24;
+        LocalDate localDate = LocalDate.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+        return (int) ChronoUnit.DAYS.between(localDate, LocalDate.now()) * 24;
     }
 
     public boolean canDo(int rightValue) {
