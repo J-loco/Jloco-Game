@@ -234,6 +234,10 @@ function Player:sendAction(id,type, val) end
 ---@return void
 function Player:sendInfoMsg(type, id) end
 
+---@param key string translation key of src/resources/translations/*.yaml
+---@return void
+function Player:sendLangMessage(key) end
+
 ---@return number[] job IDs
 function Player:jobs() end
 

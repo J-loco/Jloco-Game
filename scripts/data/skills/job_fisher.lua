@@ -45,7 +45,11 @@ local rewardForSkill = function(sk)
     ---@param p Player
     return function(p)
         local success = p:getCtxVal("job_success")
-        if not success then return end
+        if not success then
+            -- Official behaviour: a failed attempt gives neither fish nor XP. Tell the player, the client shows nothing.
+            p:sendLangMessage("job.fisher.nothing.caught")
+            return
+        end
 
         local lvlDiff = p:jobLevel(jobID) - sk.minLvl
         local quantity = math.random(1, 2 + math.floor(lvlDiff / 5))

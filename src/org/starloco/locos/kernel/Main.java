@@ -43,8 +43,12 @@ public class Main {
                 Config.isRunning = false;
                 Main.fightAsBlocked = tradeAsBlocked = true;
 
+                // Disconnecting saves each character (game masters included), then the world save writes
+                // what is only persisted there (items, guilds, houses, mounts...). Without it, a restart lost
+                // up to 20 minutes of progress (the autosave interval), and all of it for game masters.
                 if(Config.gameServer != null)
-                    Config.gameServer.kickAll(true);
+                    Config.gameServer.kickAll(false);
+                WorldSave.cast(0);
 
                 Logging.getInstance().stop();
                 DatabaseManager.get(ServerData.class).loadFully();

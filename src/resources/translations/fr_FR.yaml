@@ -219,3 +219,4 @@ quest.quest.applyquest: "Votre niveau est insuffisant pour apprendre la quête."
 
 world.world.maried.pietre.ask.accept: "Acceptez-vous d'épouser votre partenaire ?"
 world.world.maried.pietre.ask.ok: "Je déclare messieurs et madame unis par les liens sacrés du mariage."
+job.fisher.nothing.caught: "Le poisson s'est échappé : vous n'avez rien pêché. Les échecs sont fréquents avant le niveau 30 de pêcheur."

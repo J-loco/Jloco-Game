@@ -18,6 +18,7 @@ import org.starloco.locos.game.world.World;
 import org.starloco.locos.job.Job;
 import org.starloco.locos.job.JobStat;
 import org.starloco.locos.kernel.Constant;
+import org.starloco.locos.kernel.Config;
 import org.starloco.locos.object.GameObject;
 import org.starloco.locos.object.ObjectTemplate;
 import org.starloco.locos.quest.QuestProgress;
@@ -234,6 +235,13 @@ public class SPlayer extends DefaultUserdata<Player> {
         int msgId = args.nextInt();
 
         SocketManager.GAME_SEND_Im_PACKET(p, type+String.valueOf(msgId));
+    }
+
+    /** Chat message from the server translations (src/resources/translations) in the player's language. */
+    @SuppressWarnings("unused")
+    private static void sendLangMessage(Player p, ArgumentIterator args) {
+        String key = args.nextString().toString();
+        p.sendMessage(p.getLang().trans(key));
     }
 
     @SuppressWarnings("unused")
@@ -607,7 +615,8 @@ public class SPlayer extends DefaultUserdata<Player> {
 
         JobStat js = p.getMetierByID(jobID);
         if(js == null) return false;
-        js.addXp(p, xpDelta);
+        // Gathering XP (Skills.lua, job_fisher.lua) follows system.server.game.rate.job, like crafting.
+        js.addXp(p, (long) xpDelta * Config.rateJob);
 
         SocketManager.GAME_SEND_JX_PACKET(p, Collections.singletonList(js));
         return true;
