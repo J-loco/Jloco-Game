@@ -50,3 +50,25 @@ end
 for _, fn in ipairs(POST_INITS) do
     fn()
 end
+
+-- Report the object skills a player can use but no script handles: using them silently does nothing.
+-- Mount park skills (175-178) are handled in Java (Player.useMountParkSkill) before reaching the scripts.
+do
+    local javaSkills = {[175] = true, [176] = true, [177] = true, [178] = true}
+    local missing = {}
+    for _, io in pairs(IO_DEFS) do
+        for _, skillID in ipairs(io.skills) do
+            if not SKILLS[skillID] and not javaSkills[skillID] then
+                missing[skillID] = true
+            end
+        end
+    end
+    local list = {}
+    for skillID in pairs(missing) do
+        list[#list + 1] = skillID
+    end
+    table.sort(list)
+    if #list > 0 then
+        JLogF("Object skills without handler: {}", table.concat(list, ","))
+    end
+end
