@@ -26,10 +26,14 @@ services:
     volumes:
       - db-sql:/var/lib/mysql
       - ./db-init/:/docker-entrypoint-initdb.d/:ro
+    # healthcheck.sh --connect uses TCP, which stays off while db-init/*.sql is imported on an empty volume,
+    # so dependents never start against a half-loaded database (a socket ping already answers then).
     healthcheck:
-      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD}"]
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
       timeout: 20s
       retries: 10
+      start_period: 15m
   # Web portal + game client data (lang/) + launcher endpoints, at http://127.0.0.1/dofus
   starloco_web:
     image: starloco/web:local
