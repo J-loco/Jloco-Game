@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.LoggerFactory;
 import org.starloco.locos.api.AbstractDofusMessage;
@@ -296,15 +295,12 @@ public class GameClient {
         Instant now = Instant.now();
         Instant expiry = now.plusSeconds(30); // TODO Make that a config
         String jws = Jwts.builder()
-                .setIssuer("StarLocoGameServer")
-                .setSubject(String.valueOf(account.getName()))
+                .issuer("StarLocoGameServer")
+                .subject(String.valueOf(account.getName()))
                 .claim("ip", account.getCurrentIp())
-                .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(expiry))
-                .signWith(
-                    Keys.hmacShaKeyFor(Base64.getDecoder().decode(Config.exchangeKey)),
-                    SignatureAlgorithm.HS256
-                )
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expiry))
+                .signWith(Keys.hmacShaKeyFor(Base64.getDecoder().decode(Config.exchangeKey)), Jwts.SIG.HS256)
                 .compact();
 
         send("HS"+jws);

@@ -1,7 +1,7 @@
 package org.starloco.locos.database.data.game;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.starloco.locos.area.Area;
 import org.starloco.locos.database.data.FunctionDAO;
 import org.starloco.locos.game.world.World;

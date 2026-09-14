@@ -164,6 +164,6 @@ public class Main {
     }
 
     public static void clear() { //~30ms
-        AnsiConsole.out.print("\033[H\033[2J");
+        AnsiConsole.out().print("\033[H\033[2J");
     }
 }

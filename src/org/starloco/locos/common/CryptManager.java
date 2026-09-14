@@ -1,6 +1,5 @@
 package org.starloco.locos.common;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.starloco.locos.area.map.GameCase;
 import org.starloco.locos.area.map.GameMap;
 
@@ -61,7 +60,7 @@ public class CryptManager {
     }
 
     private static String unescape(String data) {
-        return StringEscapeUtils.unescapeJava(data);
+        return JavaEscapes.unescapeJava(data);
     }
 
     public static String checksumKey(String data) {
