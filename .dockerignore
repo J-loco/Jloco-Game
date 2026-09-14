@@ -1,0 +1,15 @@
+# Build context of docker/Dockerfile: sources, libs, scripts and docker/ only.
+.git
+.github
+.gradle
+.idea
+.env
+build
+logs
+config
+db-init
+db-correction
+docs
+game.sql
+game.jar
+*.md

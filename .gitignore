@@ -4,9 +4,6 @@ Build
 logs
 Logs
 game.jar
-gradlew.bat
-gradlew
 .idea
-gradle/
 # Local secrets (see .env.example)
 .env

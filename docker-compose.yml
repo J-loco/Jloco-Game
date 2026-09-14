@@ -160,8 +160,8 @@ services:
   # Login
   starloco_login:
     # Built from StarLoco-Login (Java 21; formatting, static analysis and unit tests run during the build).
-    # It speaks exchange protocol v2: the game server must be built from the same revision
-    # (./gradlew jar in StarLoco-Game before building starloco_game). Healthcheck: see its Dockerfile.
+    # It speaks exchange protocol v2: the game server must be built from the same revision (starloco_game
+    # builds its jar inside the image). Healthcheck: see its Dockerfile.
     image: starloco/login:local
     build:
       context: ../StarLoco-Login
