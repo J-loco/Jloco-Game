@@ -11,8 +11,13 @@ import org.starloco.locos.game.world.World;
 import org.starloco.locos.kernel.Config;
 import org.starloco.locos.kernel.Main;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HexFormat;
 
 class ExchangePacketHandler {
 
@@ -38,9 +43,17 @@ class ExchangePacketHandler {
 
                             case 'K': //Key
                                 switch (packet.charAt(2)) {
-                                    case '?': //Required
+                                    case '?': //Required: "SK?<protocol version>;<nonce>"
+                                        String[] challenge = packet.substring(3).split(";", 2);
+                                        if (challenge.length != 2 || !String.valueOf(ExchangeClient.PROTOCOL_VERSION).equals(challenge[0])) {
+                                            ExchangeClient.logger.error("The login server speaks exchange protocol " + (challenge[0].isEmpty() ? "1" : challenge[0])
+                                                    + ", expected " + ExchangeClient.PROTOCOL_VERSION + ": update the login server and the game server together.");
+                                            Main.stop("Exchange protocol mismatch with the login server");
+                                            break;
+                                        }
                                         int i = 50000 - Config.gameServer.getClients().size();
-                                        Config.exchangeClient.send("SK" + Config.gameServerId + ";" + Config.gameServerKey + ";" + i);
+                                        // The key never travels: prove we know it by signing the login server's nonce.
+                                        Config.exchangeClient.send("SK" + Config.gameServerId + ";" + sign(Config.gameServerKey, challenge[1]) + ";" + i);
                                         break;
 
                                     case 'K': //Ok
@@ -105,5 +118,16 @@ class ExchangePacketHandler {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+    }
+
+    /** hex HMAC-SHA256(key, nonce): the exchange handshake answer (StarLoco-Login ExchangeProtocol.sign). */
+    static String sign(String key, String nonce) {
+        try {
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+            return HexFormat.of().formatHex(mac.doFinal(nonce.getBytes(StandardCharsets.UTF_8)));
+        } catch (GeneralSecurityException | IllegalArgumentException e) {
+            throw new IllegalStateException("Cannot sign the exchange challenge (is system.server.game.key set?)", e);
+        }
     }
 }

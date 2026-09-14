@@ -2,17 +2,28 @@ package org.starloco.locos.exchange;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoConnector;
 import org.apache.mina.core.session.IoSession;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.codec.textline.LineDelimiter;
+import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.LoggerFactory;
 import org.starloco.locos.kernel.Config;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 
+/**
+ * Connection to the login server's exchange port. Protocol v2 (see StarLoco-Login ExchangeProtocol): UTF-8
+ * lines terminated by "\n", and a challenge-response handshake so the server key never travels.
+ */
 public class ExchangeClient {
+
+    /** Exchange protocol spoken by this game server; the login server announces its own in "SK?". */
+    public static final int PROTOCOL_VERSION = 2;
+    private static final int MAX_LINE_BYTES = 16 * 1024;
 
     public static Logger logger = (Logger) LoggerFactory.getLogger(ExchangeClient.class);
 
@@ -21,7 +32,7 @@ public class ExchangeClient {
     private IoConnector ioConnector = new NioSocketConnector();
 
     public ExchangeClient() {
-        this.ioConnector.setHandler(new ExchangeHandler());
+        configure(this.ioConnector);
         Config.exchangeClient = this;
         ExchangeClient.logger.setLevel(Level.INFO);
     }
@@ -67,7 +78,7 @@ public class ExchangeClient {
         this.stop();
         this.connectFuture = null;
         this.ioConnector = new NioSocketConnector();
-        this.ioConnector.setHandler(new ExchangeHandler());
+        configure(this.ioConnector);
         this.initialize();
     }
 
@@ -82,14 +93,17 @@ public class ExchangeClient {
         ExchangeClient.logger.info("The exchange client was stopped.");
     }
 
+    private static void configure(IoConnector connector) {
+        TextLineCodecFactory lines = new TextLineCodecFactory(StandardCharsets.UTF_8, LineDelimiter.UNIX, LineDelimiter.UNIX);
+        lines.setDecoderMaxLineLength(MAX_LINE_BYTES);
+        lines.setEncoderMaxLineLength(MAX_LINE_BYTES);
+        connector.getFilterChain().addLast("lines", new ProtocolCodecFilter(lines));
+        connector.setHandler(new ExchangeHandler());
+    }
+
+    /** Sends one message; line breaks inside it would split it, so they are removed. */
     public void send(String packet) {
         if(this.ioSession != null && !this.ioSession.isClosing() && this.ioSession.isConnected())
-            this.getIoSession().write(StringToIoBuffer(packet));
-    }
-    public static IoBuffer StringToIoBuffer(String packet) {
-        byte[] bytes = packet.getBytes();
-        IoBuffer ioBuffer = IoBuffer.allocate(bytes.length);
-        ioBuffer.put(bytes);
-        return ioBuffer.flip();
+            this.getIoSession().write(packet.replace("\n", "").replace("\r", ""));
     }
 }
