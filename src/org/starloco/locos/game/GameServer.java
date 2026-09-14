@@ -97,10 +97,11 @@ public class GameServer {
 
     public static void a() {}
 
-    public void kickAll(boolean kickGm) {
+    /** Disconnects the online players; with {@code spareGameMasters}, game masters stay connected. */
+    public void kickAll(boolean spareGameMasters) {
         for (Player player : new ArrayList<>(World.world.getOnlinePlayers())) {
             if (player != null && player.getGameClient() != null) {
-                if (player.getGroup() != null && !player.getGroup().isPlayer() && kickGm)
+                if (player.getGroup() != null && !player.getGroup().isPlayer() && spareGameMasters)
                     continue;
                 player.send("M04");
                 ((GameHandler) player.getGameClient().getSession().getHandler()).kick(player.getGameClient().getSession());

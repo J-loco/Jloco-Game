@@ -179,6 +179,8 @@ services:
   # Game
   starloco_game:
     image: starloco/game:latest
+    # On stop, the server disconnects everyone and saves the world: leave it time before SIGKILL.
+    stop_grace_period: 1m
     build:
       context: .
       dockerfile: ./docker/Dockerfile
