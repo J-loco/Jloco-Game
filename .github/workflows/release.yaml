@@ -1,80 +1,56 @@
-name: Create Release
+name: Release
 
 on:
   push:
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-
-env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      - 'v*' # e.g. v1.1.0
 
 permissions:
-  contents: 'write'
+  contents: write
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@master
-
-      - name: Setup JDK
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
         with:
-          distribution: 'corretto'
+          fetch-depth: 0 # git describe gives the version
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
           java-version: '21'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-      - name: Build with Gradle
-        run: ls -la && gradle jar
+      - uses: gradle/actions/setup-gradle@v6
 
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: game-jar
-          path: ./build/libs/game.jar
+      - name: Build
+        run: sh ./gradlew build
 
-      # Build / Upload to Docker
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
+      - uses: docker/setup-buildx-action@v4
+
+      - uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      - id: meta
+        uses: docker/metadata-action@v6
         with:
           images: starloco/game
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+      - uses: docker/build-push-action@v7
         with:
           context: .
-          file: ./docker/Dockerfile
+          file: docker/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Docker Hub Description (README.md)
-        uses: peter-evans/dockerhub-description@v2
+      - uses: softprops/action-gh-release@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: ${{ secrets.DOCKER_USERNAME }}/game
-          readme-filepath: README.md
-
-      # Create release
-      - name: Create Release
-        id: create_release
-        uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-          title: Release ${{ github.ref }}
-          files: |
-            ./build/libs/game.jar
+          generate_release_notes: true
+          files: build/libs/game.jar

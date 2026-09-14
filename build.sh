@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
-gradle jar
+./gradlew jar
 cp ./build/libs/game.jar "$(dirname "$0")"
