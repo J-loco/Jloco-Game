@@ -545,7 +545,8 @@ public class GameClient {
                     System.err.println("ERROR BOUTIQUE TEMPLATE OBJECT NOT FOUND : " + id);
                 }
             }
-            SocketManager.GAME_SEND_Ag_PACKET(this, item, data);
+            if (!data.isEmpty())
+                SocketManager.GAME_SEND_Ag_PACKET(this, item, data);
         }
     }
 
@@ -1793,7 +1794,6 @@ public class GameClient {
             SocketManager.GAME_SEND_Ec_PACKET(this.player, "K;8378");
             SocketManager.GAME_SEND_Ow_PACKET(this.player);
             SocketManager.GAME_SEND_IO_PACKET_TO_MAP(this.player.getCurMap(), this.player.getId(), "+8378");
-            this.player.startActionOnCell(this.player.getGameAction());
             ((BreakingObject) value).getObjects().clear();
         }
     }

@@ -7,6 +7,7 @@ import org.starloco.locos.common.SocketManager;
 import org.starloco.locos.database.DatabaseManager;
 import org.starloco.locos.database.data.game.BankData;
 import org.starloco.locos.database.data.game.TrunkData;
+import org.starloco.locos.database.data.login.BaseTrunkData;
 import org.starloco.locos.database.data.login.PlayerData;
 import org.starloco.locos.game.action.ExchangeAction;
 import org.starloco.locos.game.world.World;
@@ -36,6 +37,47 @@ public class Trunk {
         this.houseId = houseId;
         this.mapId = mapId;
         this.cellId = cellId;
+    }
+
+    // Skills of house safes (interactive object 85), as named in the client lang (skills_fr.swf).
+    public static final int SKILL_OPEN = 104;        // Ouvrir
+    public static final int SKILL_LOCK = 105;        // Verrouiller
+    public static final int SKILL_CHANGE_CODE = 106; // Modifier code
+
+    /** A safe skill used on the given cell of the player's map (called by scripts/data/skills/houses.lua). */
+    public static void useSafe(Player player, int cellId, int skillId) {
+        if (player.getCurMap() == null || player.getFight() != null)
+            return;
+        int mapId = player.getCurMap().getId();
+
+        switch (skillId) {
+            case SKILL_OPEN -> {
+                House house = player.getInHouse();
+                if (house == null)
+                    return;
+                Trunk trunk = getTrunkIdByCoord(mapId, cellId).orElseGet(() -> {
+                    // First use of a safe of this house: create it for the house owner.
+                    Trunk created = new Trunk(-1, house.getId(), mapId, cellId);
+                    created.setOwnerId(house.getOwnerId());
+                    created.setKey("-");
+                    created.setKamas(0);
+                    ((BaseTrunkData) DatabaseManager.get(BaseTrunkData.class)).insert(created);
+                    World.world.addTrunk(created);
+                    return created;
+                });
+                if (trunk.getOwnerId() != player.getAccID() && trunk.getHouseId() == house.getId()
+                        && player.getAccID() == house.getOwnerId()) {
+                    trunk.setOwnerId(player.getAccID());
+                    ((TrunkData) DatabaseManager.get(TrunkData.class)).update(player, house);
+                }
+                trunk.enter(player);
+            }
+            case SKILL_LOCK, SKILL_CHANGE_CODE -> getTrunkIdByCoord(mapId, cellId)
+                    .filter(trunk -> trunk.isTrunk(player, trunk))
+                    .ifPresent(trunk -> trunk.Lock(player));
+            default -> {
+            }
+        }
     }
 
     public static void closeCode(Player P) {

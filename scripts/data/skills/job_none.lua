@@ -24,8 +24,24 @@ SKILLS[44] = function(p, _)
     p:savePosition(md.id, md.zaapCell)
 end
 
--- Heal
-SKILLS[62] = function (p, _)  p:setLifePercent(100) end
+-- Heal: fountain of youth (62), pot (111)
+SKILLS[62] = function (p, _)
+    p:setLifePercent(100)
+    p:sendLangMessage("area.map.gamecase.startaction.fountain")
+end
+SKILLS[111] = SKILLS[62]
+
+-- Crafts without job, recipes in jobs_data under the skill id
+registerWorkshopSkill(22)   -- Peel potatoes (potato table)
+registerWorkshopSkill(110)  -- Wood bench
+registerWorkshopSkill(121)  -- Crush resources (crusher)
+registerWorkshopSkill(151)  -- Summon a fairy (fireworks workbench)
+
+-- Break items into runes (crusher)
+registerWorkshopSkill(181, function(p) p:openCrusher() end)
+
+-- Craftsmen book
+SKILLS[170] = function(p, _) p:openCraftsmenBook() end
 
 -- Draw water from well
 registerGatherSkill(102,
@@ -36,6 +52,28 @@ registerGatherSkill(102,
         gatherSkillAddItem(p, 311, math.random(1, 10))
     end,
     respawnBetweenMillis(120000, 420000)
+)
+
+-- Pick up potatoes (potato heap)
+registerGatherSkill(42,
+    4,
+    function(_) return 1500 end,
+    function(p)
+        -- 537: Potato
+        gatherSkillAddItem(p, 537, math.random(1, 5))
+    end,
+    respawnBetweenMillis(600000, 600000)
+)
+
+-- Fish a Quaquack at the fair
+registerGatherSkill(152,
+    4,
+    function(_) return 1500 end,
+    function(p)
+        -- 6659: Quaquack
+        gatherSkillAddItem(p, 6659, 1)
+    end,
+    respawnBetweenMillis(10000, 10000)
 )
 
 -- Use Zaap

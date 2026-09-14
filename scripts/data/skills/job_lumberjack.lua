@@ -23,4 +23,4 @@ local gatherSkills = {
 
 registerGatherJobSkills(jobID, {toolType=toolType}, gatherSkills)
 
-registerCraftSkill(101, {jobID = jobID, toolType = toolType}, ingredientsForCraftJob(jobID))
+registerCraftSkill(101, {jobID = jobID, toolType = toolType})
