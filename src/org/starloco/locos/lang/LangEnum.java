@@ -29,7 +29,8 @@ public enum  LangEnum {
     public String trans(String key, Object... str) {
         if(this.result == null) {
             result = loadYAML(flag + "_" + flag.toUpperCase() + ".yaml");
-            return key + " result null";
+            if(this.result == null)
+                return key + " result null";
         }
         String sentence = (String) this.result.get(key);
         if(sentence == null)

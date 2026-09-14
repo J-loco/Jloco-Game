@@ -218,3 +218,4 @@ quest.quest.applyquest: "Your level is insufficient to learn the quest."
 
 world.world.maried.pietre.ask.accept: "Do you agree to marry your partner?"
 world.world.maried.pietre.ask.ok: "I declare gentlemen and madam united by the sacred bonds of marriage."
+job.fisher.nothing.caught: "The fish got away: you caught nothing. Failures are common before fisherman level 30."

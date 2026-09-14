@@ -218,3 +218,4 @@ quest.quest.applyquest: "Tu nivel es insuficiente para aprender la misión."
 
 world.world.maried.pietre.ask.accept: "¿Estás de acuerdo en casarte con tu pareja?"
 world.world.maried.pietre.ask.ok: "Declaro señores y señoras unidos por los lazos sagrados del matrimonio."
+job.fisher.nothing.caught: "O peixe escapou: não pescou nada. As falhas são frequentes antes do nível 30 de pescador."
