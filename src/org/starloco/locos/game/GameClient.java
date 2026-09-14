@@ -545,7 +545,8 @@ public class GameClient {
                     System.err.println("ERROR BOUTIQUE TEMPLATE OBJECT NOT FOUND : " + id);
                 }
             }
-            SocketManager.GAME_SEND_Ag_PACKET(this, item, data);
+            if (!data.isEmpty())
+                SocketManager.GAME_SEND_Ag_PACKET(this, item, data);
         }
     }
 
