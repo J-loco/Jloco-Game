@@ -62,6 +62,23 @@ end
 ---@alias GatherRewardFn fun(p:Player)
 ---@alias GatherDurationFn fun(p:Player):number
 
+---@param p Player
+---@param cellId number
+local function animateWorkshop(p, cellId)
+    local map = p:map()
+
+    if map:getAnimationState(cellId) == AnimStates.READY then
+        -- Official: sends LOCKED(F=2) then IN_USE (F=3) in the same packet
+        -- Official: sends READYING(F=5) after ~55 seconds
+
+        -- map:setAnimationState(cellId, AnimStates.LOCKED)
+        map:setAnimationState(cellId, AnimStates.IN_USE)
+        World:delayForMs(55000, function()
+            map:setAnimationState(cellId, AnimStates.READYING)
+        end)
+    end
+end
+
 ---@param skillId number
 ---@param requirements SkillRequirements
 ---@param ingredientCountFn fun(p:Player):number optional: by default the Java job tables give the slot count
@@ -69,21 +86,21 @@ function registerCraftSkill(skillId,  requirements, ingredientCountFn)
     SKILLS[skillId] = function(p, cellId)
         if not checkRequirements(p, requirements) then return end
 
-        -- Animation
-        local map = p:map()
-
-        if map:getAnimationState(cellId) == AnimStates.READY then
-            -- Official: sends LOCKED(F=2) then IN_USE (F=3) in the same packet
-            -- Official: sends READYING(F=5) after ~55 seconds
-
-            -- map:setAnimationState(cellId, AnimStates.LOCKED)
-            map:setAnimationState(cellId, AnimStates.IN_USE)
-            World:delayForMs(55000, function()
-                map:setAnimationState(cellId, AnimStates.READYING)
-            end)
-        end
+        animateWorkshop(p, cellId)
 
         return p:useCraftSkill(skillId, ingredientCountFn and ingredientCountFn(p) or 0)
+    end
+end
+
+-- Workshop skill anyone can use (no job): opens a craft or exchange window
+---@param skillId number
+---@param openFn fun(p:Player, skillId:number) optional: the craft window of the skill by default
+function registerWorkshopSkill(skillId, openFn)
+    SKILLS[skillId] = function(p, cellId)
+        animateWorkshop(p, cellId)
+
+        if openFn then return openFn(p, skillId) end
+        return p:useBaseCraftSkill(skillId)
     end
 end
 

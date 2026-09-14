@@ -153,6 +153,21 @@ public class SPlayer extends DefaultUserdata<Player> {
     }
 
     @SuppressWarnings("unused")
+    private static void useBaseCraftSkill(Player p, ArgumentIterator args) {
+        p.useBaseCraftSkill(args.nextInt());
+    }
+
+    @SuppressWarnings("unused")
+    private static void openCraftsmenBook(Player p, ArgumentIterator args) {
+        p.openCraftsmenBook();
+    }
+
+    @SuppressWarnings("unused")
+    private static void openCrusher(Player p, ArgumentIterator args) {
+        p.openCrusher();
+    }
+
+    @SuppressWarnings("unused")
     private static Object getCtxVal(Player p, ArgumentIterator args) {
         String key = args.nextString().toString();
         return Optional.ofNullable(p.getExchangeAction()).map(a -> a.getContextValue(key)).orElse(null);
@@ -201,7 +216,8 @@ public class SPlayer extends DefaultUserdata<Player> {
     private static void setLifePercent(Player p, ArgumentIterator args) {
         int percent = args.nextInt();
 
-        p.setPdv((int) ((p.getMaxPdv() * 100L) / percent));
+        p.setPdv((int) ((p.getMaxPdv() * (long) percent) / 100));
+        SocketManager.GAME_SEND_STATS_PACKET(p);
     }
 
     @SuppressWarnings("unused")

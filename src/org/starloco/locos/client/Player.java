@@ -35,6 +35,7 @@ import org.starloco.locos.game.GameServer;
 import org.starloco.locos.game.action.ExchangeAction;
 import org.starloco.locos.game.action.GameAction;
 import org.starloco.locos.game.action.type.DocumentActionData;
+import org.starloco.locos.game.action.type.EmptyActionData;
 import org.starloco.locos.game.action.type.NpcDialogActionData;
 import org.starloco.locos.game.action.type.ScenarioActionData;
 import org.starloco.locos.game.world.World;
@@ -43,6 +44,7 @@ import org.starloco.locos.job.Job;
 import org.starloco.locos.job.JobAction;
 import org.starloco.locos.job.JobConstant;
 import org.starloco.locos.job.JobStat;
+import org.starloco.locos.job.maging.BreakingObject;
 import org.starloco.locos.kernel.Config;
 import org.starloco.locos.kernel.Constant;
 import org.starloco.locos.kernel.Main;
@@ -3868,6 +3870,41 @@ public class Player implements Scripted<SPlayer>, Actor {
         jobAction.setSM(sm);
         setExchangeAction(new ExchangeAction<>(ExchangeAction.CRAFTING, jobAction));
         SocketManager.GAME_SEND_ECK_PACKET(this, 3, ingredientsCount + ";" + skillId);
+    }
+
+    /** Slots of the crafts anyone can do: 22 peel potatoes, 110 wood bench, 121 crush resources, 151 fireworks. */
+    private static final Map<Integer, Integer> BASE_CRAFT_SLOTS = Map.of(22, 1, 110, 2, 121, 8, 151, 4);
+
+    /**
+     * Opens the craft window of a skill that needs no job. Its recipes are in the pseudo-job whose id is the
+     * skill id (jobs_data), which JobAction.craft uses when the action has no JobStat.
+     */
+    public void useBaseCraftSkill(int skillId) {
+        Integer slots = BASE_CRAFT_SLOTS.get(skillId);
+        if (slots == null || World.world.getMetier(skillId) == null || getExchangeAction() != null) return;
+        setAway(true);
+        JobAction jobAction = new JobAction(skillId, slots, 0, true, 100, 0);
+        jobAction.player = this;
+        setExchangeAction(new ExchangeAction<>(ExchangeAction.CRAFTING, jobAction));
+        SocketManager.GAME_SEND_ECK_PACKET(this, 3, slots + ";" + skillId);
+    }
+
+    /** Jobs listed by the craftsmen book (skill 170); the client asks for the public craftsmen of one with EJF. */
+    private static final String CRAFTSMEN_BOOK_JOBS = "2;11;13;14;15;16;17;18;19;20;24;25;26;27;28;31;33;36;41;43;44;45;46;47;48;49;50;56;58;62;63;64;65";
+
+    public void openCraftsmenBook() {
+        if (getExchangeAction() != null) return;
+        setLivreArtisant(true);
+        setExchangeAction(new ExchangeAction<>(ExchangeAction.USING_OBJECT, EmptyActionData.INSTANCE));
+        SocketManager.GAME_SEND_ECK_PACKET(this, 14, CRAFTSMEN_BOOK_JOBS);
+    }
+
+    /** Opens the crusher (skill 181): up to 8 items broken into runes. */
+    public void openCrusher() {
+        if (getExchangeAction() != null) return;
+        setAway(true);
+        setExchangeAction(new ExchangeAction<>(ExchangeAction.BREAKING_OBJECTS, new BreakingObject()));
+        SocketManager.GAME_SEND_ECK_PACKET(this, 3, "8;181");
     }
 
     public String parseJobData() {

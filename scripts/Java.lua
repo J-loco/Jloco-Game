@@ -159,6 +159,16 @@ function Player:clearExchangeAction(typeID) end
 ---@return void
 function Player:useCraftSkill(skillId, ingredientsCount) end
 
+---@param skillId number craft without job: 22 peel, 110 wood bench, 121 crush resources, 151 fireworks
+---@return void
+function Player:useBaseCraftSkill(skillId) end
+
+---@return void
+function Player:openCraftsmenBook() end
+
+---@return void
+function Player:openCrusher() end
+
 ---@param template number
 ---@param quantity number
 ---@return Item

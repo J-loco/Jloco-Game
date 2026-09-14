@@ -1,11 +1,15 @@
---- Well
-RegisterAnimation(7519, AnimStates.READY, {
+--- Well (7519), and the other gathering spots without job using the same frames:
+--- potato heap (7510), Quaquack at the fair (7549)
+local wellSG = {
     [AnimStates.READY] = {frame=1, interactive=true},
     [AnimStates.LOCKED] = {frame=2},
     [AnimStates.IN_USE] = {frame=3, duration=433, next=AnimStates.NOT_READY},
     [AnimStates.NOT_READY] = {frame=4},
     [AnimStates.READYING] = {frame=5, duration=400, next=AnimStates.READY}
-})
+}
+RegisterAnimation(7519, AnimStates.READY, wellSG)
+RegisterAnimation(7510, AnimStates.READY, wellSG)
+RegisterAnimation(7549, AnimStates.READY, wellSG)
 
 --- Crafting Workbenches
 local workbenchesID = {
