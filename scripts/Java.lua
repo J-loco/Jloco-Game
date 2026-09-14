@@ -234,6 +234,16 @@ function Player:sendAction(id,type, val) end
 ---@return void
 function Player:sendInfoMsg(type, id) end
 
+---@param cellId number cell of the house door on the player's map
+---@param skillId number 81 lock, 84 enter, 97 buy, 98 sell, 100 unlock, 108 change the sale price
+---@return void
+function Player:useHouseDoor(cellId, skillId) end
+
+---@param cellId number cell of the safe on the player's map
+---@param skillId number 104 open, 105 lock, 106 change the code
+---@return void
+function Player:useSafe(cellId, skillId) end
+
 ---@param key string translation key of src/resources/translations/*.yaml
 ---@return void
 function Player:sendLangMessage(key) end

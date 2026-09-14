@@ -1,5 +1,7 @@
 package org.starloco.locos.game.world;
 
+import org.starloco.locos.area.map.GameCase;
+import org.starloco.locos.area.map.GameMap;
 import org.starloco.locos.entity.map.House;
 import org.starloco.locos.entity.map.Trunk;
 import org.starloco.locos.client.Account;
@@ -20,6 +22,64 @@ import java.util.Map;
  * Created by Locos on 30/10/2016.
  */
 public class HouseManager {
+
+    // Skills of house doors (interactive object 70), as named in the client lang (skills_fr.swf).
+    public static final int SKILL_LOCK = 81;          // Verrouiller
+    public static final int SKILL_ENTER = 84;         // Entrer
+    public static final int SKILL_BUY = 97;           // Acheter
+    public static final int SKILL_SELL = 98;          // Vendre
+    public static final int SKILL_UNLOCK = 100;       // Déverrouiller
+    public static final int SKILL_CHANGE_PRICE = 108; // Modifier le prix de vente
+
+    /** A door skill used on the given cell of the player's map (called by scripts/data/skills/houses.lua). */
+    public void useDoor(Player player, int cellId, int skillId) {
+        if (player.getCurMap() == null || player.getFight() != null)
+            return;
+        House house = getHouseIdByCoord(player.getCurMap().getId(), cellId);
+        if (house == null)
+            return;
+
+        switch (skillId) {
+            case SKILL_ENTER -> enter(player, house);
+            case SKILL_BUY -> {
+                player.setInHouse(house);
+                house.buyIt(player);
+            }
+            case SKILL_SELL, SKILL_CHANGE_PRICE -> {
+                player.setInHouse(house);
+                house.sellIt(player);
+            }
+            case SKILL_LOCK -> {
+                if (house.isHouse(player, house))
+                    house.lock(player);
+            }
+            case SKILL_UNLOCK -> unlock(player, house);
+            default -> {
+            }
+        }
+    }
+
+    private void enter(Player player, House house) {
+        GameMap inside = World.world.getMap(house.getHouseMapId());
+        GameCase entrance = inside == null ? null : inside.getCase(house.getHouseCellId());
+        if (entrance == null || !entrance.isWalkable(false)) {
+            SocketManager.GAME_SEND_MESSAGE(player, player.getLang().trans("area.map.gamecase.startaction.house.broken"));
+            return;
+        }
+        if (player.isOnMount()) {
+            SocketManager.GAME_SEND_Im_PACKET(player, "1118");
+            return;
+        }
+        house.enter(player);
+        player.setInHouse(house);
+    }
+
+    private void unlock(Player player, House house) {
+        if (!house.isHouse(player, house))
+            return;
+        ((HouseData) DatabaseManager.get(HouseData.class)).updateCode(player, house, "-");
+        load(player, player.getCurMap().getId());
+    }
 
     public House getHouseIdByCoord(int map_id, int cell_id) {
         for (Map.Entry<Integer, House> house : World.world.getHouses().entrySet())
@@ -164,6 +224,9 @@ public class HouseManager {
             House house = (House) player.getExchangeAction().getValue();
             if (house != null && house.isHouse(player, house)) {
                 ((HouseData) DatabaseManager.get(HouseData.class)).updateCode(player, house, packet);
+                // Refresh the door options (Verrouiller / Déverrouiller) shown by the client.
+                if (player.getCurMap() != null)
+                    load(player, player.getCurMap().getId());
             }
             closeCode(player);
         }

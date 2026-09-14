@@ -142,12 +142,16 @@ public class HouseData extends FunctionDAO<House> {
     public void updateCode(Player P, House h, String packet) {
         PreparedStatement p = null;
         try {
-            p = getPreparedStatement("UPDATE " + getTableName() + " SET `key`=? WHERE `id`=? AND owner_id = ?;");
+            // access is the locked flag sent to the client ("L+|id;access;..."): locked while a code is set.
+            int access = "-".equals(packet) ? 0 : 1;
+            p = getPreparedStatement("UPDATE " + getTableName() + " SET `key`=?, `access`=? WHERE `id`=? AND owner_id = ?;");
             p.setString(1, packet);
-            p.setInt(2, h.getId());
-            p.setInt(3, P.getAccID());
+            p.setInt(2, access);
+            p.setInt(3, h.getId());
+            p.setInt(4, P.getAccID());
             execute(p);
             h.setKey(packet);
+            h.setAccess(access);
         } catch (SQLException e) {
             super.sendError(e);
         } finally {

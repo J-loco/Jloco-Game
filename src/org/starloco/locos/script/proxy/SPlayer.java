@@ -14,6 +14,7 @@ import org.starloco.locos.entity.monster.MonsterGroup;
 import org.starloco.locos.fight.spells.Spell;
 import org.starloco.locos.game.action.ExchangeAction;
 import org.starloco.locos.game.action.type.NpcDialogActionData;
+import org.starloco.locos.entity.map.Trunk;
 import org.starloco.locos.game.world.World;
 import org.starloco.locos.job.Job;
 import org.starloco.locos.job.JobStat;
@@ -103,6 +104,20 @@ public class SPlayer extends DefaultUserdata<Player> {
     private static void openTrunk(Player p, ArgumentIterator args) {
         int cellID = args.nextInt();
         p.openTrunk(cellID);
+    }
+
+    @SuppressWarnings("unused")
+    private static void useHouseDoor(Player p, ArgumentIterator args) {
+        int cellID = args.nextInt();
+        int skillID = args.nextInt();
+        World.world.getHouseManager().useDoor(p, cellID, skillID);
+    }
+
+    @SuppressWarnings("unused")
+    private static void useSafe(Player p, ArgumentIterator args) {
+        int cellID = args.nextInt();
+        int skillID = args.nextInt();
+        Trunk.useSafe(p, cellID, skillID);
     }
 
     @SuppressWarnings("unused")
