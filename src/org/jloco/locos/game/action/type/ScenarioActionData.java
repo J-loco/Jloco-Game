@@ -7,15 +7,16 @@ import java.util.function.BiConsumer;
 
 public class ScenarioActionData implements ActionDataInterface {
     private final ExchangeAction<?> source;
-    private final BiConsumer<Player,Boolean> onCompleted;
+    private final BiConsumer<Player,Integer> onCompleted;
 
-    public ScenarioActionData(ExchangeAction<?> source, BiConsumer<Player,Boolean> onCompleted) {
+    public ScenarioActionData(ExchangeAction<?> source, BiConsumer<Player,Integer> onCompleted) {
         this.source = source;
         this.onCompleted = onCompleted;
     }
 
-    public void onCompletion(Player player, boolean succeed) {
+    /** @param result value of the scenario's END action, -1 if the client sent none */
+    public void onCompletion(Player player, int result) {
         player.setExchangeAction(source);
-        onCompleted.accept(player, succeed);
+        onCompleted.accept(player, result);
     }
 }

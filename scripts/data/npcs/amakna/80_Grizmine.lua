@@ -33,6 +33,7 @@ local betResponse = function(qId, price, answers, randomResp)
     return function(p)
         if not p:modKamas(-price) then
             p:endDialog()
+            return
         end
         p:setCtxVal("bet", price)
         local responses = table.shuffled(answers)

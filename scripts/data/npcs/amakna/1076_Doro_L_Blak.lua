@@ -7,8 +7,9 @@ npc.accessories = {0, 8569, 8642, 0, 0}
 ---@param p Player
 ---@param answer number
 function npc:onTalk(p, answer)
-    if answer == 0 then p:ask(5788, {498})
-    elseif answer == 498 then p:endDialog()
+    if answer == 0 then p:ask(5788, {4987})
+    elseif answer == 4987 then p:ask(5789, {4989})
+    elseif answer == 4989 then p:endDialog() -- TODO: sneeze services (Q5792)
     end
 end
 

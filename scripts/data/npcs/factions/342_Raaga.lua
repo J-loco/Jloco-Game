@@ -5,7 +5,7 @@ local npc = Npc(342, 1205)
 ---@param p Player
 ---@param answer number
 function npc:onTalk(p, answer)
-    if answer == 0 then p:ask()
+    if answer == 0 then p:endDialog() -- TODO: dialog unknown
     end
 end
 

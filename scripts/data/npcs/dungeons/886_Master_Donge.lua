@@ -58,6 +58,7 @@ function npc:onTalk(p, answer)
     local quest = QUESTS[questID]
     if onTalkMaps[p:mapID()] then
         onTalkMaps[p:mapID()](p, answer)
+        return
     end
     if p:mapID() == 10352 then
         if quest:availableTo(p) and answer == 0 then
@@ -72,10 +73,10 @@ function npc:onTalk(p, answer)
         elseif quest:ongoingFor(p) then
             --TODO: ADD WHAT HAPPENS IF WE HAVE COMPLETED THE OBJECTIVE
             return p:ask(3847)
+        else
+            --TODO: NEED TO ADD DIALOGID WHEN WE SPEAK TO HIM WITH QUEST ALREADY COMPLETED
+            p:endDialog()
         end
-    elseif quest:finishedBy(p) then
-        --TODO: NEED TO ADD DIALOGID WHEN WE SPEAK TO HIM WITH QUEST ALREADY COMPLETED
-        p:ask()
     end
 end
 

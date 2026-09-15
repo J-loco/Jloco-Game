@@ -9,10 +9,8 @@ function npc:onTalk(p, answer)
     elseif answer == 498 then
         p:ask(547, {492})
     elseif answer == 492 then
-        local consumeAll = p:consumeItem(1010, 1) and p:consumeItem(1011, 1) and p:consumeItem(1012, 1) and p:consumeItem(1013, 1)
-
         if hasAllItems then
-            if consumeAll then
+            if p:consumeItem(1010, 1) and p:consumeItem(1011, 1) and p:consumeItem(1012, 1) and p:consumeItem(1013, 1) then
                 p:ask(584, {496})
             else
                 p:endDialog()
@@ -20,7 +18,7 @@ function npc:onTalk(p, answer)
         else
             p:ask(585)
         end
-    elseif answer == 497 then
+    elseif answer == 496 then
         p:teleport(1766, 332)
         p:endDialog()
     end

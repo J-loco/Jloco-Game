@@ -6,7 +6,7 @@ npc.colors = {12076438, 10705571, 11750041}
 ---@param p Player
 ---@param answer number
 function npc:onTalk(p, answer)
-    if answer == 0 then p:ask(1627, {125})
+    if answer == 0 then p:ask(1627)
     end
 end
 

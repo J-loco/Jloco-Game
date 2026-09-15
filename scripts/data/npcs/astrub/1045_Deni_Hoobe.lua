@@ -15,7 +15,7 @@ function npc:onTalk(p, answer)
     elseif answer == 4772 then p:ask(5643, {4783, 4784})
     elseif answer == 4763 then p:ask(5638, {4773, 4767})
     elseif answer == 4739 or answer == 4758 then p:ask(5625, {4742, 4741})
-    elseif answer == 4742 or answer == 4780 then p:ask(5628, {4748, 4747})
+    elseif answer == 4742 or answer == 4743 or answer == 4780 then p:ask(5628, {4748, 4747})
     elseif answer == 4752 or answer == 4753 then p:ask(5635, {4762, 4761})
     elseif answer == 4741 or answer == 4784 then p:ask(5627, {4745, 4746})
     elseif answer == 4750 or answer == 4764 then p:ask(5633, {4758, 4757})
@@ -26,7 +26,7 @@ function npc:onTalk(p, answer)
     elseif answer == 4748 or answer == 4749 or answer == 4767 then p:ask(5632, {4755, 4756})
     elseif answer == 4754 or answer == 4755 or answer == 4778 then p:ask(5636, {4764, 4763})
     elseif answer == 4745 or answer == 4756 or answer == 4757 then p:ask(5630, {4752, 4751})
-    elseif answer == 4759 or answer == 4779 or answer == 4781 then p:ask(5629, {4750, 4749})
+    elseif answer == 4744 or answer == 4759 or answer == 4779 or answer == 4781 then p:ask(5629, {4750, 4749})
     end
 end
 

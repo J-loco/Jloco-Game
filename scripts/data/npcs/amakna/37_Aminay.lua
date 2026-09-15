@@ -11,6 +11,7 @@ function npc:onTalk(p, answer)
     if answer == 0 then p:ask(81, {80, 78})
     elseif answer == 80 then p:ask(84)
     elseif answer == 78 then p:ask(82, {79})
+    elseif answer == 79 then p:ask(83)
 
     end
 end

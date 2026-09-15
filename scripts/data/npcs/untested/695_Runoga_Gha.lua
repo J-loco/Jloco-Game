@@ -26,8 +26,8 @@ npc.sales = {
 ---@param p Player
 ---@param answer number
 function npc:onTalk(p, answer)
-    if answer == 0 then p:ask(2880, {250})
-    elseif answer == 250 then p:endDialog()
+    if answer == 0 then p:ask(2880, {2503})
+    elseif answer == 2503 then p:ask(2881)
     end
 end
 

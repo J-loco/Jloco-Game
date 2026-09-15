@@ -321,7 +321,7 @@ function Player:getCtxVal(key) end
 --- Start a scripted scenario
 ---@param id number
 ---@param date string
----@param onEnd fun(p:Player,succeed:boolean)
+---@param onEnd fun(p:Player,succeed:boolean,result:number) result is the scenario END value (-1 if none)
 function Player:startScenario(id, date, onEnd) end
 
 ---@param id number

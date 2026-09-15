@@ -40,9 +40,9 @@ npc.barters = {
 ---@param p Player
 ---@param answer number
 function npc:onTalk(p, answer)
-    if answer == 0 then p:ask(90, {111, 109, 110, 209, 37})
+    if answer == 0 then p:ask(90, {111, 109, 110, 209})
     elseif answer == 209 then p:ask(262)
-    elseif answer == 109 then p:ask(127, {65})
+    elseif answer == 109 then p:ask(127)
     elseif answer == 110 then p:ask(128)
     elseif answer == 111 then p:ask(129)
     end

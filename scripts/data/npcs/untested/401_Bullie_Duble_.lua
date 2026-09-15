@@ -7,8 +7,8 @@ npc.accessories = {0, 2447, 2446, 0, 0}
 ---@param p Player
 ---@param answer number
 function npc:onTalk(p, answer)
-    if answer == 0 then p:ask(1642, {127})
-    elseif answer == 127 then p:ask(164)
+    if answer == 0 then p:ask(1642, {1272})
+    elseif answer == 1272 then p:ask(1643)
     end
 end
 

@@ -6,7 +6,7 @@ npc.accessories = {0, 2096, 777, 0, 0}
 ---@param p Player
 ---@param answer number
 function npc:onTalk(p, answer)
-    if answer == 0 then p:ask(2028, {171})
+    if answer == 0 then p:ask(2028)
     end
 end
 

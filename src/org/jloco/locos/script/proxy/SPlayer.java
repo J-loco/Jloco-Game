@@ -281,7 +281,7 @@ public class SPlayer extends DefaultUserdata<Player> {
         ByteString date = args.nextString();
         LuaFunction<?,?,?,?,?> onEnd = args.nextFunction();
 
-        p.startScenario(id, date.toString(), (player, succeed) -> DataScriptVM.getInstance().call(onEnd, player.scripted(), succeed));
+        p.startScenario(id, date.toString(), (player, result) -> DataScriptVM.getInstance().call(onEnd, player.scripted(), result == 1, result));
     }
 
     @SuppressWarnings("unused")

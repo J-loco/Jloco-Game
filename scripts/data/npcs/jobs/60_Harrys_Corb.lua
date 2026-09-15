@@ -25,7 +25,7 @@ function npc:onTalk(p, answer)
         else
             p:ask(336)
         end
-    elseif answer == 365 then p:ask(170)
+    elseif answer == 363 then p:ask(170)
     elseif answer == 1945 then p:ask(132)
     end
 end

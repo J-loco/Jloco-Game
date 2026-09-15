@@ -6,7 +6,7 @@ local questID = 18
 ---@param answer number
 function npc:onTalk(p, answer)
 	if answer == 0 then
-	 if p:questFinished(questID) then  p:ask()
+	 if p:questFinished(questID) then  p:endDialog()
         elseif p:questOngoing(questID) then p:ask(986)
         else p:ask(985, {685})
 		end

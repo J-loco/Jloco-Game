@@ -7012,7 +7012,13 @@ public class GameClient {
         if(packet.charAt(1) != 'V') {
             return;
         }
-        boolean succeed = packet.charAt(2) == '1';
+        // TV<END action value>|<cell>|<orientation>: 1 means success, mini-games also send their score (2, 3, 4...)
+        int result;
+        try {
+            result = Integer.parseInt(param[0].substring(2));
+        } catch (NumberFormatException e) {
+            result = -1;
+        }
 
         // Move player to expected cell (FIXME can probably be used to teleport)
         this.player.set_orientation(Byte.parseByte(param[2]));
@@ -7021,7 +7027,7 @@ public class GameClient {
         cell.addPlayer(player);
         this.player.setCurCell(cell);
 
-        sad.onCompletion(player, succeed);
+        sad.onCompletion(player, result);
     }
 
     /**

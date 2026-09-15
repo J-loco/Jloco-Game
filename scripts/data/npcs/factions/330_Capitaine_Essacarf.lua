@@ -5,12 +5,9 @@ npc.accessories = {0, 2097, 0, 0, 0}
 ---@param p Player
 ---@param answer number
 function npc:onTalk(p, answer)
-    if answer == 0 then p:ask(1288, {248})
-    elseif answer == 248 then p:ask(304, {240, 246})
-    elseif answer == 240 then p:ask(305, {247, 249})
-    elseif answer == 247 then p:ask(307)
-    elseif answer == 249 then p:ask(306)
-    elseif answer == 246 then p:ask(307)
+    -- TODO: Q2859 bail (2506 -> Q1633) and leaving the prison are not implemented
+    if answer == 0 then p:ask(1288, {2488})
+    elseif answer == 2488 then p:ask(2859)
     end
 end
 

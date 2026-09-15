@@ -19,6 +19,7 @@ requireReload("data/Skills")
 
 -- Define classes
 requireReload("models/NPC")
+requireReload("models/TroolFair")
 requireReload("models/MapDef")
 requireReload("models/Quest")
 requireReload("models/QuestObjectives")

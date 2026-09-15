@@ -1331,7 +1331,7 @@ public class Player implements Scripted<SPlayer>, Actor {
         return true;
     }
 
-    public void startScenario(int id, String date, BiConsumer<Player,Boolean> onEnd) {
+    public void startScenario(int id, String date, BiConsumer<Player,Integer> onEnd) {
         exchangeAction =  new ExchangeAction<>(
                 ExchangeAction.IN_SCENARIO,
                 new ScenarioActionData(exchangeAction, onEnd));
