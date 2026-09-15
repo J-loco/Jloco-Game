@@ -74,6 +74,29 @@ Client packets are UTF-8 text frames terminated by NUL (the game server uses Apa
 - `eventhandlers/` — Lua-side event handlers registered via `Handlers` (the `EventHandlers` object injected into the VM).
 - `models/` — reusable Lua model definitions.
 
+### Admin (GM) groups (`JLoco-Game/`)
+GM rights belong to a character: `world_players.groupe` (login DB) holds the group id, `0` or `-1` meaning no rights. Groups are declared in `scripts/data/AdminGroups.lua` with `RegisterAdminGroup(id, name, isPlayer, true | {"CMD", ...})` (`true` = every command). `CommandAdmin.apply` checks `Group.haveCommand` before running a command.
+
+| Id | Group | Commands |
+|---|---|---|
+| 1 | Fondateur | all |
+| 2 | Administrateur | all |
+| 3 | Community Manager | ~120 moderation and world commands (see the Lua file) |
+| 4 | Développeur | all |
+| 5 | Développeuse | all |
+| 6 | Chef modérateur | ANAME, INFOS, GON, KICKFIGHT, WHOALL, MUTE, UNMUTE, JAIL, UNJAIL, MUTEMAP, MORPH |
+| 7 | Modérateur | group 6 plus SHOWITEM, SHOWBANK, RMOBS, RENAMEPERSO, WHOIS, SIZE, INV, INCARNAM, ASTRUB |
+| 8 | Animateur | ANAME, INFOS, KICKFIGHT, WHOALL, MUTEMAP, MORPH |
+| 9 | Modératrice en test | ANAME, INFOS, GON, KICKFIGHT, WHOALL, MORPH |
+| 10 | Bêta-Testeur | GON, TP, LIFE, NGO, NOAGRO, RMOBS, ENDFIGHT, LISTMAP, WALKFAST |
+| 11 | Mercenaire | HELP |
+| 12 | Debugueur | INFOS, GON, TP, NGO, LISTMAP, DELTRIGGER, SAVETHAT, APPLYTHAT, MAPINFO, SHOWFIGHTPOS, ADDFIGHTPOS, DELFIGHTPOS |
+
+Granting a group:
+- SQL (first GM, character offline): `UPDATE world_players SET groupe = 1 WHERE name = '<character>';`. The group is read when the character loads; `.RELOAD ADMIN` re-reads `groupe` for every connected player.
+- In game: `.SETGROUPE <id> <character>` (target must be online; saves to DB and opens the console with `BAIO`). `.SETGROUPE -1 <character>` removes rights (`BAIC`). `.SHOWRIGHTGROUPE <id>` lists a group's commands.
+- After editing `AdminGroups.lua`: restart or `.RELOAD SCRIPTS`.
+
 ### Web portal (`JLoco-Web/`)
 PHP 8.4 app (Composer: FastRoute, Twig, phpdotenv, Symfony Mailer) served from `public/` at `http://127.0.0.1/dofus/`. Request flow: `public/index.php` → `src/Kernel.php` (legacy `?page=` 301 redirects, session, remember-me, routing, CSRF, error pages, CSP/security headers) → controller in `src/Controller/` → repositories (`src/Repository/`, all page SQL) and services (`src/Service/`) → Twig template (`templates/`). Routes are named in `config/routes.php` (`url('name', params)` in Twig and controllers); services are autowired by `src/Container.php` (factories in `config/container.php`). Settings: `src/Config.php`, from env (documented in `JLoco-Web/.env.example`; compose passes `WEB_*` variables from `JLoco-Game/.env`).
 
