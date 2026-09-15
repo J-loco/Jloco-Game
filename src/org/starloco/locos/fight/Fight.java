@@ -94,6 +94,7 @@ public class Fight {
     private Prism prism;
     private GameMap map, mapOld;
     private Fighter init0, init1;
+    private int flagCell0 = -1; // cell of team 0's flag on the RP map, resent to players who arrive later
     private Turn turn;
 
     private int totalTurns = 0;
@@ -322,6 +323,8 @@ public class Fight {
         if (c < 0)
             c = this.init0.getPlayer().getCurCell().getId();
 
+        this.flagCell0 = c;
+
         SocketManager.GAME_SEND_GAME_ADDFLAG_PACKET_TO_MAP(this.init0.getPlayer().getCurMap(), 4, this.init0.getId(), group.getId(), c, "0;-1", group.getCellId(), "1;-1");
         SocketManager.GAME_SEND_ADD_IN_TEAM_PACKET_TO_MAP(this.init0.getPlayer().getCurMap(), this.init0.getId(), this.init0);
         for (Fighter f : this.team1.values())
@@ -486,6 +489,8 @@ public class Fight {
         if (c < 0)
             c = this.init0.getPlayer().getCurCell().getId();
 
+        this.flagCell0 = c;
+
         SocketManager.GAME_SEND_GAME_ADDFLAG_PACKET_TO_MAP(this.init0.getPlayer().getCurMap(), 5, this.init0.getId(), perco.getId(), c, "0;-1", perco.getCell(), "3;-1");
         SocketManager.GAME_SEND_ADD_IN_TEAM_PACKET_TO_MAP(this.init0.getPlayer().getCurMap(), this.init0.getId(), getInit0());
 
@@ -581,6 +586,8 @@ public class Fight {
         int c = PathFinding.getNearestCellAround(this.init0.getPlayer().getCurMap(), this.init0.getPlayer().getCurCell().getId(), prism.getCell(), new ArrayList<>());
         if (c < 0)
             c = this.init0.getPlayer().getCurCell().getId();
+
+        this.flagCell0 = c;
 
         SocketManager.GAME_SEND_GAME_ADDFLAG_PACKET_TO_MAP(this.init0.getPlayer().getCurMap(), 0, this.init0.getId(), prism.getId(), c, "0;"
                 + this.init0.getPlayer().getAlignment(), prism.getCell(), "0;"
@@ -695,6 +702,10 @@ public class Fight {
         setState(Constant.FIGHT_STATE_PLACE);
     }
 
+    private int getFlagCell0() {
+        return this.flagCell0 >= 0 ? this.flagCell0 : this.init0.getPlayer().getCurCell().getId();
+    }
+
     public static void FightStateAddFlag(GameMap map, Player player) {
         map.getFights().stream().filter(fight -> fight.state == Constant.FIGHT_STATE_PLACE).forEach(fight -> {
             if (fight.type == Constant.FIGHT_TYPE_CHALLENGE) {
@@ -705,13 +716,13 @@ public class Fight {
                         fight.init0.getId(), fight.init1.getId(), fight.init0.getPlayer().getCurCell().getId(), "0;" + fight.init0.getPlayer().getAlignment(), fight.init1.getPlayer().getCurCell().getId(), "0;" + fight.init1.getPlayer().getAlignment());
             } else if (fight.type == Constant.FIGHT_TYPE_PVM) {
                 SocketManager.GAME_SEND_GAME_ADDFLAG_PACKET_TO_PLAYER(player, 4,
-                        fight.init0.getId(), fight.monsterGroup.getId(), fight.init0.getPlayer().getCurCell().getId() + 1, "0;-1", fight.monsterGroup.getCellId(), "1;-1");
+                        fight.init0.getId(), fight.monsterGroup.getId(), fight.getFlagCell0(), "0;-1", fight.monsterGroup.getCellId(), "1;-1");
             } else if (fight.type == Constant.FIGHT_TYPE_PVT) {
                 SocketManager.GAME_SEND_GAME_ADDFLAG_PACKET_TO_PLAYER(player, 5,
-                        fight.init0.getId(), fight.collector.getId(), fight.init0.getPlayer().getCurCell().getId() + 1, "0;-1", fight.collector.getCell(), "3;-1");
+                        fight.init0.getId(), fight.collector.getId(), fight.getFlagCell0(), "0;-1", fight.collector.getCell(), "3;-1");
             } else if (fight.type == Constant.FIGHT_TYPE_CONQUETE) {
                 SocketManager.GAME_SEND_GAME_ADDFLAG_PACKET_TO_PLAYER(player, 0,
-                        fight.init0.getId(), fight.prism.getId(), fight.init0.getPlayer().getCurCell().getId(), "0;" + fight.init0.getPlayer().getAlignment(), fight.prism.getCell(), "0;" + fight.prism.getAlignment());
+                        fight.init0.getId(), fight.prism.getId(), fight.getFlagCell0(), "0;" + fight.init0.getPlayer().getAlignment(), fight.prism.getCell(), "0;" + fight.prism.getAlignment());
             }
             SocketManager.GAME_SEND_REFRESH_TEAM_PACKET_TO_MAP(map, fight.init0.getId(), fight.team0.values());
             int id = fight.init1 == null ? fight.collector == null ? fight.prism == null ? -1 : fight.prism.getId() : fight.collector.getId() : fight.init1.getId();
