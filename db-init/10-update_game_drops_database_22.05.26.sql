@@ -1,3 +1,5 @@
+USE starloco_game;
+
 -- ----------------------------
 -- Table structure for drops
 -- ----------------------------
