@@ -1,4 +1,4 @@
-USE starloco_game;
+USE jloco_game;
 
 -- Spell scrolls sold by Papycha had no on-use action, so double-clicking them did nothing.
 -- Action type 6 = learn spell (args = spell id).

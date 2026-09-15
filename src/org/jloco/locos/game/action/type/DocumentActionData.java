@@ -1,0 +1,19 @@
+package org.jloco.locos.game.action.type;
+
+import org.jloco.locos.client.Player;
+import org.jloco.locos.script.DataScriptVM;
+
+public class DocumentActionData implements ActionDataInterface {
+    private final int id;
+
+    public DocumentActionData(int id) {
+        this.id = id;
+    }
+
+    public void onQuestHRef(Player player, int questID) {
+        player.setExchangeAction(null);
+        DataScriptVM.getInstance().handlers.onDocQuestHref(player, id, questID);
+    }
+
+
+}

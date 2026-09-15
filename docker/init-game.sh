@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 
 # check if config file exists
-if ! test -f "${STARLOCO_CONFIG_PATH}"; then
+if ! test -f "${JLOCO_CONFIG_PATH}"; then
   echo "Config file does not exist, using default file"
-  cp /embedded/game.config.properties ${STARLOCO_CONFIG_PATH}
+  cp /embedded/game.config.properties ${JLOCO_CONFIG_PATH}
 fi
 
 

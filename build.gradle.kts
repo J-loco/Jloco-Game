@@ -2,7 +2,7 @@ plugins {
     java
 }
 
-group = "org.starloco.locos"
+group = "org.jloco.locos"
 // Version from git ("dev" without git, e.g. in the Docker build).
 version = runCatching {
     providers.exec {
@@ -60,7 +60,7 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(
-            "Main-Class" to "org.starloco.locos.kernel.Main",
+            "Main-Class" to "org.jloco.locos.kernel.Main",
             "Implementation-Version" to project.version,
         )
     }

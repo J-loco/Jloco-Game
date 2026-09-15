@@ -1,4 +1,4 @@
-# StarLoco - Game
+# JLoco - Game
 The most advanced public 1.39 dofus emulator written in Java 21.
 
 ## Summary
@@ -21,9 +21,9 @@ For running the project:
 ## Usage
 
 This repository is intended for people who want to compile their own version.
-If you just want to run the project, use the [Docker](https://github.com/StarLoco/StarLoco/tree/main/docker) image
+If you just want to run the project, use the [Docker](https://github.com/JLoco/JLoco/tree/main/docker) image
 
-Configuration file path can be specified with environment variable `STARLOCO_CONFIG_PATH`
+Configuration file path can be specified with environment variable `JLOCO_CONFIG_PATH`
 
 ## Contribute
 
@@ -33,4 +33,4 @@ Feel free to open an issue or create a pull request.
 
 ## Thanks us by buying us a coffee
 
-<a href="https://www.buymeacoffee.com/starloco" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+<a href="https://www.buymeacoffee.com/jloco" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>

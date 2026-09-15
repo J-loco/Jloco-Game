@@ -39,4 +39,4 @@ jobs:
           context: .
           file: docker/Dockerfile
           push: false
-          tags: starloco/game:ci
+          tags: jloco/game:ci

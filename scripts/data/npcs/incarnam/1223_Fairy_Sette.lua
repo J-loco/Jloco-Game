@@ -9,7 +9,7 @@ npc.quests = {1054} -- Only used to always show a ! on top of her, just like on 
 -- As official servers cannot change the result of selecting a specific answerID based on the NPC,
 -- they would have to duplicate the text and create a different answer.
 --
--- StarLoco scripts allows us to cleanly do things, so that's what we do here.
+-- JLoco scripts allows us to cleanly do things, so that's what we do here.
 
 ---@param p Player
 ---@param answer number

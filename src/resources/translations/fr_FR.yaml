@@ -14,7 +14,7 @@ client.player.jail.free.wait: "Vous devez attendre encore #1 secondes en prison.
 client.player.jail.ask.waiting: "Vous êtes en prison !<br />Vous devrez donc patienter quelques Minutes avant de pouvoir sortir.<br/>Parlez au gardien de prison pour obtenir plus d'information."
 client.player.event.start.join: "(<b>Infos</b>) : L'événement #1 a démarré, inscrivez-vous à l'aide de <b>.event</b>."
 client.player.learnspell.exist: "Tu possèdes déjà ce sort."
-client.player.onjoingame.startmessage: "Bienvenue sur StarLoco !"
+client.player.onjoingame.startmessage: "Bienvenue sur JLoco !"
 client.player.useprisme.nokamas: "Vous n'avez pas suffisamment de Kamas pour réaliser cette action."
 client.player.onjoingame.welcome: "Le joueur #1 vient de se connecter."
 

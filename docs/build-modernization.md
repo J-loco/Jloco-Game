@@ -1,10 +1,10 @@
-# StarLoco-Game: build modernization plan
+# JLoco-Game: build modernization plan
 
 Status: done (2026-09-14). Results in "Outcome" at the end.
 
 ## Context
 
-StarLoco-Login was migrated to a modern Gradle build (see `StarLoco-Login/docs/modernization.md`).
+JLoco-Login was migrated to a modern Gradle build (see `JLoco-Login/docs/modernization.md`).
 The game server's build has problems that don't need a tool change to fix:
 
 | # | Problem | Consequence |
@@ -12,10 +12,10 @@ The game server's build has problems that don't need a tool change to fix:
 | B1 | `.gitignore` excludes `gradlew`, `gradlew.bat` and `gradle/` | A fresh clone has no wrapper: builds depend on whatever Gradle is installed (`build.sh` and `release.yaml` call a global `gradle`) |
 | B2 | `build.gradle` runs `'git rev-parse …'.execute()` | The build fails where `git` isn't installed (Docker build stages, some CI images) |
 | B3 | 25 jars vendored in `libs/`, pulled in with `fileTree` | No visible versions, and 7 of them are never imported. The vendored `javassist.jar` (2014) duplicates the javassist that `reflections` 0.10.2 needs; which one ends up in the fat jar depends on classpath order. |
-| B4 | The Docker image copies `build/libs/game.jar` | `./gradlew jar` must be run by hand before `docker compose build starloco_game`, otherwise the image silently ships an old jar |
+| B4 | The Docker image copies `build/libs/game.jar` | `./gradlew jar` must be run by hand before `docker compose build jloco_game`, otherwise the image silently ships an old jar |
 | B5 | `release.yaml` uses outdated or unpinned actions (`actions/checkout@master`, `docker/*@v2/v4`, the unmaintained `marvinpinto/action-automatic-releases@latest`), and there is no CI on push | Releases are fragile; nothing checks that `master` builds |
 
-Goal: same build setup as StarLoco-Login, **without changing runtime behaviour**. Library upgrades are a separate,
+Goal: same build setup as JLoco-Login, **without changing runtime behaviour**. Library upgrades are a separate,
 later step (see "Not in this plan").
 
 ## Scope
@@ -32,7 +32,7 @@ later step (see "Not in this plan").
 - The version comes from `git describe`, falling back to `dev` when git is missing (fixes B2).
 - Layout unchanged: sources stay in `src/` and resources in `src/resources/`. Moving 263 files to `src/main/java`
   would only add churn (and break the line references in CLAUDE.md).
-- The `jar` task still builds the fat `game.jar` with `Main-Class: org.starloco.locos.kernel.Main`, so `start.bat`,
+- The `jar` task still builds the fat `game.jar` with `Main-Class: org.jloco.locos.kernel.Main`, so `start.bat`,
   `build.sh` and `docker/init-game.sh` keep working.
 
 ### 3. Dependencies from Maven Central, same versions
@@ -74,7 +74,7 @@ All versions go in `gradle/libs.versions.toml` and **keep the version of the jar
 - `.github/workflows/ci.yml` on push/PR:
   - `./gradlew build` on Temurin 21 with `gradle/actions/setup-gradle`, uploading `game.jar`;
   - a Docker image build.
-- `release.yaml` rewritten like StarLoco-Login's: current action versions, the Docker Hub push, a GitHub release with
+- `release.yaml` rewritten like JLoco-Login's: current action versions, the Docker Hub push, a GitHub release with
   `game.jar` (softprops/action-gh-release).
 - Both lint clean with actionlint.
 
@@ -93,8 +93,8 @@ All versions go in `gradle/libs.versions.toml` and **keep the version of the jar
 
 1. `./gradlew build` passes with the wrapper on a clean checkout, and `game.jar` has the same main class and no missing
    dependencies (`jdeps --missing-deps` on the runtime classpath).
-2. `docker compose build starloco_game` works **without** running `./gradlew jar` first (with `build/` deleted).
-3. `docker compose up -d starloco_game`:
+2. `docker compose build jloco_game` works **without** running `./gradlew jar` first (with `build/` deleted).
+3. `docker compose up -d jloco_game`:
    - the server loads its data;
    - it logs "The login server has validated the connection";
    - the login server logs "Game server 601 authenticated".
@@ -107,7 +107,7 @@ All versions go in `gradle/libs.versions.toml` and **keep the version of the jar
   log4j, protobuf, typesafe-config, commons-cli/logging). Every game class and resource is identical.
 - `jdeps --missing-deps`, old jar (from the previous image) against the new one: the only newly missing package is
   `com.google.gson`, used by the optional `org.reflections.serializers.JsonSerializer`, which the game doesn't use.
-- `docker compose build starloco_game` with no `build/` directory: the image builds the jar itself.
+- `docker compose build jloco_game` with no `build/` directory: the image builds the jar itself.
 - The rebuilt server:
   - loaded its data and Lua scripts;
   - was validated by the login server ("Game server 601 authenticated");
@@ -158,5 +158,5 @@ Unchanged: reflections 0.10.2 (latest release), and the vendored `luna` and `jep
 - character switch: the game server's HS256 token (jjwt 0.13) was accepted by the login server;
 - no exception or warning in the game log.
 
-The module-info exclusion and the driver log level were built after those checks; restart `starloco_game` to run
+The module-info exclusion and the driver log level were built after those checks; restart `jloco_game` to run
 them.

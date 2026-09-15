@@ -1,36 +1,36 @@
-# StarLoco stack. Secrets come from .env (copy .env.example); server settings from config/*.properties.
+# JLoco stack. Secrets come from .env (copy .env.example); server settings from config/*.properties.
 #
 #   docker compose up -d                       game + website (everything below except the tools)
-#   docker compose up -d starloco_game         game only: MariaDB and login start with it
-#   docker compose build starloco_game         after changing Java code (scripts/ is mounted: a restart is enough)
+#   docker compose up -d jloco_game         game only: MariaDB and login start with it
+#   docker compose build jloco_game         after changing Java code (scripts/ is mounted: a restart is enough)
 #
 # Opt-in tools use profiles and never start with "up": see the TOOLS section.
 
 x-web-runtime: &web-runtime
-  image: starloco/web:local
+  image: jloco/web:local
   build:
-    context: ../StarLoco-Web
+    context: ../JLoco-Web
     target: runtime
   networks:
-    - starloco
+    - jloco
   volumes:
-    - ../StarLoco-Web:/var/www/starloco-web
+    - ../JLoco-Web:/var/www/jloco-web
 
 services:
   # ==================================================================================================
   # GAME: required to play
   # ==================================================================================================
 
-  # Login and game databases (starloco_login, starloco_game), seeded from db-init/ on an empty volume.
-  starloco_mariadb:
+  # Login and game databases (jloco_login, jloco_game), seeded from db-init/ on an empty volume.
+  jloco_mariadb:
     image: mariadb:11.3
     restart: always
     networks:
-      - starloco
+      - jloco
     ports:
       - "127.0.0.1:3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD in StarLoco-Game/.env (see .env.example)}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD in JLoco-Game/.env (see .env.example)}
     volumes:
       - db-sql:/var/lib/mysql
       - ./db-init/:/docker-entrypoint-initdb.d/:ro
@@ -44,28 +44,28 @@ services:
       start_period: 15m
 
   # Login server: clients on 450, game servers on the private exchange port 666.
-  starloco_login:
-    # Built from StarLoco-Login (Java 21; formatting, static analysis and unit tests run during the build).
-    # It speaks exchange protocol v2: the game server must be built from the same revision (starloco_game
+  jloco_login:
+    # Built from JLoco-Login (Java 21; formatting, static analysis and unit tests run during the build).
+    # It speaks exchange protocol v2: the game server must be built from the same revision (jloco_game
     # builds its jar inside the image). Healthcheck: see its Dockerfile.
-    image: starloco/login:local
+    image: jloco/login:local
     build:
-      context: ../StarLoco-Login
+      context: ../JLoco-Login
     restart: always
     networks:
-      - starloco
+      - jloco
     ports:
       - "450:450"
       - "127.0.0.1:666:666"
     volumes:
       - ./config/login.config.properties:/app/login.config.properties
     depends_on:
-      starloco_mariadb:
+      jloco_mariadb:
         condition: service_healthy
 
   # Game server (built from this directory, see docker/Dockerfile).
-  starloco_game:
-    image: starloco/game:latest
+  jloco_game:
+    image: jloco/game:latest
     build:
       context: .
       dockerfile: ./docker/Dockerfile
@@ -73,16 +73,16 @@ services:
     # On stop, the server disconnects everyone and saves the world: leave it time before SIGKILL.
     stop_grace_period: 1m
     networks:
-      - starloco
+      - jloco
     ports:
       - "5555:5555"
     volumes:
       - ./config/:/app/config
       - ./scripts:/app/scripts
     depends_on:
-      starloco_mariadb:
+      jloco_mariadb:
         condition: service_healthy
-      starloco_login:
+      jloco_login:
         condition: service_healthy
 
   # ==================================================================================================
@@ -90,7 +90,7 @@ services:
   # Not needed by the servers; the client falls back to its local data/ when the site is down.
   # ==================================================================================================
 
-  starloco_web:
+  jloco_web:
     <<: *web-runtime
     restart: always
     ports:
@@ -100,14 +100,14 @@ services:
       APP_BASE_PATH: ${WEB_APP_BASE_PATH:-/dofus}
       APP_DEBUG: ${WEB_APP_DEBUG:-0}
       TRUST_CLOUDFLARE: ${WEB_TRUST_CLOUDFLARE:-0}
-      SITE_NAME: ${WEB_SITE_NAME:-StarLoco}
+      SITE_NAME: ${WEB_SITE_NAME:-JLoco}
       ADMIN_ACCOUNT_ID: ${WEB_ADMIN_ACCOUNT_ID:-1}
-      DB_HOST: starloco_mariadb
-      # Least-privilege account created by starloco_web_migrate (never root).
-      DB_USER: starloco_web
-      DB_PASS: ${WEB_DB_PASSWORD:?set WEB_DB_PASSWORD in StarLoco-Game/.env (see .env.example)}
-      LOGIN_HOST: starloco_login
-      GAME_HOST: starloco_game
+      DB_HOST: jloco_mariadb
+      # Least-privilege account created by jloco_web_migrate (never root).
+      DB_USER: jloco_web
+      DB_PASS: ${WEB_DB_PASSWORD:?set WEB_DB_PASSWORD in JLoco-Game/.env (see .env.example)}
+      LOGIN_HOST: jloco_login
+      GAME_HOST: jloco_game
       GAME_SERVER_ID: ${WEB_GAME_SERVER_ID:-601}
       FORUM_URL: ${WEB_FORUM_URL:-}
       FORUM_RSS_URL: ${WEB_FORUM_RSS_URL:-}
@@ -115,108 +115,108 @@ services:
       VOTE_URL: ${WEB_VOTE_URL:-https://www.rpg-paradize.com/}
       VOTE_POINTS: ${WEB_VOTE_POINTS:-5}
       DEDIPASS_PUBLIC_KEY: ${WEB_DEDIPASS_PUBLIC_KEY:-}
-      SHOP_SERVERS: ${WEB_SHOP_SERVERS:-1:starloco_game}
+      SHOP_SERVERS: ${WEB_SHOP_SERVERS:-1:jloco_game}
       PASSWORD_HASH_SCHEME: ${WEB_PASSWORD_HASH_SCHEME:-legacy}
       MAILER_DSN: ${WEB_MAILER_DSN:-}
       MAIL_FROM: ${WEB_MAIL_FROM:-}
     depends_on:
-      starloco_web_migrate:
+      jloco_web_migrate:
         condition: service_completed_successfully
-      starloco_web_assets:
+      jloco_web_assets:
         condition: service_completed_successfully
 
-  # One-off: applies StarLoco-Web/migrations and provisions the starloco_web DB user, then exits.
-  # Re-run by hand with: docker compose run --rm starloco_web_migrate
-  starloco_web_migrate:
+  # One-off: applies JLoco-Web/migrations and provisions the jloco_web DB user, then exits.
+  # Re-run by hand with: docker compose run --rm jloco_web_migrate
+  jloco_web_migrate:
     <<: *web-runtime
     restart: "no"
     command: ["php", "bin/migrate"]
     environment:
-      DB_HOST: starloco_mariadb
+      DB_HOST: jloco_mariadb
       DB_USER: root
-      DB_PASS: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD in StarLoco-Game/.env (see .env.example)}
-      WEB_DB_USER: starloco_web
-      WEB_DB_PASSWORD: ${WEB_DB_PASSWORD:?set WEB_DB_PASSWORD in StarLoco-Game/.env (see .env.example)}
+      DB_PASS: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD in JLoco-Game/.env (see .env.example)}
+      WEB_DB_USER: jloco_web
+      WEB_DB_PASSWORD: ${WEB_DB_PASSWORD:?set WEB_DB_PASSWORD in JLoco-Game/.env (see .env.example)}
       # The portal user also gets write access to gifts in every shop game database.
-      SHOP_SERVERS: ${WEB_SHOP_SERVERS:-1:starloco_game}
+      SHOP_SERVERS: ${WEB_SHOP_SERVERS:-1:jloco_game}
     depends_on:
-      starloco_mariadb:
+      jloco_mariadb:
         condition: service_healthy
 
-  # One-off: builds StarLoco-Web/public/assets/app.css with Tailwind, then exits.
-  # Rebuild after editing templates: docker compose run --rm starloco_web_assets
-  starloco_web_assets:
-    image: starloco/web-assets:local
+  # One-off: builds JLoco-Web/public/assets/app.css with Tailwind, then exits.
+  # Rebuild after editing templates: docker compose run --rm jloco_web_assets
+  jloco_web_assets:
+    image: jloco/web-assets:local
     build:
-      context: ../StarLoco-Web
+      context: ../JLoco-Web
       target: tailwind
     restart: "no"
     volumes:
-      - ../StarLoco-Web:/app
+      - ../JLoco-Web:/app
 
   # ==================================================================================================
   # TOOLS: opt-in, started only through their profile or "docker compose run"
   # ==================================================================================================
 
-  # Portal developer tools: docker compose run --rm starloco_web_tools <composer script>
+  # Portal developer tools: docker compose run --rm jloco_web_tools <composer script>
   # e.g. check (everything CI runs), test, test:unit, stan, cs, cs:fix, rector
-  starloco_web_tools:
-    image: starloco/web-dev:local
+  jloco_web_tools:
+    image: jloco/web-dev:local
     build:
-      context: ../StarLoco-Web
+      context: ../JLoco-Web
       target: dev
     profiles: ["tools"]
     networks:
-      - starloco
+      - jloco
     volumes:
-      - ../StarLoco-Web:/var/www/starloco-web
+      - ../JLoco-Web:/var/www/jloco-web
       # Source of truth of the XP tables: composer experience:check / experience:sync
-      - ./scripts/data/Experience.lua:/opt/starloco-game/Experience.lua:ro
+      - ./scripts/data/Experience.lua:/opt/jloco-game/Experience.lua:ro
     environment:
-      EXPERIENCE_LUA: /opt/starloco-game/Experience.lua
+      EXPERIENCE_LUA: /opt/jloco-game/Experience.lua
       # Portal database, for scripts such as item-sprites.
-      DB_HOST: starloco_mariadb
-      DB_USER: starloco_web
-      DB_PASS: ${WEB_DB_PASSWORD:?set WEB_DB_PASSWORD in StarLoco-Game/.env (see .env.example)}
-      # Integration tests create and drop starloco_login_test / starloco_game_test.
-      TEST_DB_HOST: starloco_mariadb
+      DB_HOST: jloco_mariadb
+      DB_USER: jloco_web
+      DB_PASS: ${WEB_DB_PASSWORD:?set WEB_DB_PASSWORD in JLoco-Game/.env (see .env.example)}
+      # Integration tests create and drop jloco_login_test / jloco_game_test.
+      TEST_DB_HOST: jloco_mariadb
       TEST_DB_USER: root
-      TEST_DB_PASS: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD in StarLoco-Game/.env (see .env.example)}
+      TEST_DB_PASS: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD in JLoco-Game/.env (see .env.example)}
 
   # Shop item images from the client sprites:
-  #   docker compose run --rm starloco_web_tools item-sprites   # list what the shop sells
-  #   docker compose run --rm starloco_web_sprites              # render public/assets/img/items (--force to redo)
-  starloco_web_sprites:
-    image: starloco/web-sprites:local
+  #   docker compose run --rm jloco_web_tools item-sprites   # list what the shop sells
+  #   docker compose run --rm jloco_web_sprites              # render public/assets/img/items (--force to redo)
+  jloco_web_sprites:
+    image: jloco/web-sprites:local
     build:
-      context: ../StarLoco-Web
+      context: ../JLoco-Web
       target: sprites
     profiles: ["tools"]
     volumes:
-      - ../StarLoco-Web:/app
-      - ../StarLoco-Client/resources/app/retroclient/clips/items:/clips:ro
+      - ../JLoco-Web:/app
+      - ../JLoco-Client/resources/app/retroclient/clips/items:/clips:ro
 
   # Development mail catcher, UI at http://127.0.0.1:8025:
-  #   docker compose --profile mail up -d starloco_mailpit
-  # with WEB_MAILER_DSN=smtp://starloco_mailpit:1025 and WEB_MAIL_FROM=noreply@starloco.local in .env
-  starloco_mailpit:
+  #   docker compose --profile mail up -d jloco_mailpit
+  # with WEB_MAILER_DSN=smtp://jloco_mailpit:1025 and WEB_MAIL_FROM=noreply@jloco.local in .env
+  jloco_mailpit:
     image: axllent/mailpit:v1.31.1
     profiles: ["mail"]
     restart: unless-stopped
     networks:
-      - starloco
+      - jloco
     ports:
       - "127.0.0.1:8025:8025"
 
   # Redis: no server uses it (the game dropped its unused Jedis dependency). Kept for future use:
-  #   docker compose --profile redis up -d starloco_redis
-  starloco_redis:
+  #   docker compose --profile redis up -d jloco_redis
+  jloco_redis:
     # Use image redis/redis-stack-server in production
     image: "redis/redis-stack"
     profiles: ["redis"]
     restart: always
     networks:
-      - starloco
+      - jloco
     ports:
       - "127.0.0.1:6379:6379"
     environment:
@@ -226,7 +226,7 @@ services:
       - "db-game:/data/"
 
 networks:
-  starloco:
+  jloco:
 
 volumes:
   db-sql:

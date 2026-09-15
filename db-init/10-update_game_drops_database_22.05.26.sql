@@ -1,4 +1,4 @@
-USE starloco_game;
+USE jloco_game;
 
 -- ----------------------------
 -- Table structure for drops

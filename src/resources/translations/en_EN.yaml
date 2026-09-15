@@ -14,7 +14,7 @@ client.player.jail.free.wait: "You have to wait another #1 seconds in jail."
 client.player.jail.ask.waiting: "You're in jail! <br/> So you'll have to wait a few minutes before you can go out. <br/> Talk to the prison guard for more information."
 client.player.event.start.join: "(<b> Info </b>): Event #1 has started, register with <b>.event </b>."
 client.player.learnspell.exist: "You already have this spell."
-client.player.onjoingame.startmessage: "Welcome to StarLoco !"
+client.player.onjoingame.startmessage: "Welcome to JLoco !"
 client.player.useprisme.nokamas: "You do not have enough Kamas to perform this action."
 client.player.onjoingame.welcome: "Player #1 has just logged in."
 

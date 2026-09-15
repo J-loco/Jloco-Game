@@ -1,4 +1,4 @@
-USE starloco_game;
+USE jloco_game;
 
 create table quest_progress
 (

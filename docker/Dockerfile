@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
-# StarLoco-Game image. The jar is built inside the image: no need to run ./gradlew jar beforehand.
-# Build context: the StarLoco-Game directory (see .dockerignore).
+# JLoco-Game image. The jar is built inside the image: no need to run ./gradlew jar beforehand.
+# Build context: the JLoco-Game directory (see .dockerignore).
 
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /src
@@ -13,7 +13,7 @@ RUN --mount=type=cache,target=/root/.gradle sh ./gradlew --no-daemon --quiet jar
 
 FROM amazoncorretto:21-alpine
 
-ENV STARLOCO_CONFIG_PATH=/app/config/game.config.properties
+ENV JLOCO_CONFIG_PATH=/app/config/game.config.properties
 
 COPY ./docker/init-game.sh /init-game.sh
 COPY ./docker/game.config.properties /embedded/game.config.properties

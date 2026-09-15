@@ -1,4 +1,4 @@
-USE starloco_game;
+USE jloco_game;
 
 -- 17 instead of 16.
 -- 16 means more enemy than allies

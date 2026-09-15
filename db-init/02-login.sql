@@ -1,9 +1,9 @@
-USE starloco_login;
+USE jloco_login;
 
 /*
  Navicat MariaDB Data Transfer
 
- Source Server         : StarLoco
+ Source Server         : JLoco
  Source Server Type    : MariaDB
  Source Server Version : 100322 (10.3.22-MariaDB)
  Source Host           : localhost:3306
