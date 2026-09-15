@@ -39,7 +39,7 @@ Config: `login.config.properties` (or `STARLOCO_LOGIN_CONFIG`); every key can be
 cd StarLoco-Game
 docker compose -f docker-compose.yml up
 ```
-This spins up MariaDB, Redis, the login image, and builds+runs the game image. Config overrides live in `StarLoco-Game/config/`.
+`docker-compose.yml` is split in three sections: GAME (MariaDB, login, game: `docker compose up -d starloco_game` starts only these), WEBSITE (portal + its one-off migrate/assets jobs; the client falls back to its local `data/` without it) and TOOLS (opt-in profiles: `tools` for `starloco_web_tools`/`starloco_web_sprites`, `mail` for Mailpit, `redis` for Redis, which no server uses). Config overrides live in `StarLoco-Game/config/`.
 
 ## Architecture
 
